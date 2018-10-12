@@ -32,3 +32,5 @@ int ask_question_int(char *question);
 char *ask_question_string(char *question);
 
 char *ask_question_shelf(char *question);
+
+float str_cmp(char *str_in, char *str_cmp);
