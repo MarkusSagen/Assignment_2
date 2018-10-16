@@ -56,7 +56,7 @@ char *read_string()
   int i = 0;
   while (i<buf_siz)
     {
-  scanf("%c", buf + i);
+      buf[i] = getchar();
   if (buf[i] == '\n')
     {
       buf[i] = '\0';
