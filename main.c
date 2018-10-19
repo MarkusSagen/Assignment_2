@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "utils.h"
-#define webstore_list_len 14
+#define webstore_list_len (int)(sizeof(list)/sizeof(list[0])) -1
 
 void webstore_add_merch(){
   
@@ -43,7 +43,7 @@ void webstore_undo(){
 }
 
 static int webstore_menu_ui() {
-  char * list[] = {"Add Merchandise", "List Merchandise", "Remove Merchandise", "Edit Merchandise", "Show Stock", "Replenish", "Create Cart", "Remove Cart", "Add To Cart", "Remove From Cart", "Calcute Cost", "Checkout", "Undo", "Quit", NULL};
+  char * const list[] = {"Add Merchandise", "List Merchandise", "Remove Merchandise", "Edit Merchandise", "Show Stock", "Replenish", "Create Cart", "Remove Cart", "Add To Cart", "Remove From Cart", "Calcute Cost", "Checkout", "Undo", "Quit", NULL};
   puts("\n\tMENU\n\t――――――――");
   for (int i=0; list[i]; ++i) printf("%d\t%s\n", i+1, list[i]);
   puts("");
