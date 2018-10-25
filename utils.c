@@ -78,26 +78,42 @@ char *ask_question_string(char *question, char *buf, int buf_siz)
 */
 
 
-answer_t ask_question(char *question, check_func check, convert_func convert)
+char* ask_question(char *question, char *error_msg, check_func check)
 {
-  int buf_siz = 255;
+  printf("%s", question);
+  int buf_siz = 50;
   char buf[buf_siz];
-  bool valid = true;
-  while (valid)
+  int i = 0;
+  while (i<buf_siz)
     {
-      printf("%s\n",question);
-      read_string();
-      valid = check(buf)==false;
+      buf[i] = getchar();
+  if (buf[i] == '\n')
+    {
+      buf[i] = '\0';
+      if (check(buf)) return strdup(buf);
+      else return ask_question(error_msg, error_msg, check);
     }
-  return convert(buf);
+  ++i;
+    }
+  if (check(buf)) return strdup(buf);
+      else return ask_question(error_msg, error_msg, check);
 }
 
+bool yes_no() {
+  char *str_in = read_string();
+  float score = str_cmp(str_in, "y");
+  if (score>=3 || str_in[0]=='\0') return true; 
+  else return false;
+}
+bool check_true() {
+  return true;
+}
 answer_t make_float(char *str)
 {
   return (answer_t) { .float_value = atof(str) };
 }
 
-int ask_question_int(char *question)
+/*int ask_question_int(char *question)
 {
   answer_t answer = ask_question(question, is_number, (convert_func) atoi);
   return answer.int_value; // svaret som ett heltal
@@ -111,7 +127,7 @@ char *ask_question_shelf(char *question)
 char *ask_question_string(char *question)
 {
   return ask_question(question, not_empty, (convert_func) strdup).string_value;
-}
+}*/
 
 static float char_match (char in, char cmp) {
   if (in == cmp) {return 1;}
