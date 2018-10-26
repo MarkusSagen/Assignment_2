@@ -34,6 +34,20 @@ int webstore_menu_ui() {
 
 static void show_stock(webstore_t *webstore) {
   char *name = ask_question("Name: ", "Name: ", check_true);
+  elem_t key = {.p = name};
+  elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
+  if (!elem) {
+    puts("\nDoes not exist!");
+    return;
+  }
+  webstore_stock_t *stock = (*((webstore_merch_t**)(elem->p)))->stock;
+  
+  puts("");
+   while (stock)
+    {
+      printf("%s: %d\n", stock->location, stock->amount);
+      stock = stock->next;
+    }
   free(name);
 }
 
@@ -58,18 +72,19 @@ static void edit_merch(webstore_t *webstore) {
 
 static void replenish(webstore_t *webstore) {
  char *edit = ask_question("Name: ", "Name: ", check_true);
- char *amount_str = ask_question("Name: ", "Name: ", check_true);
+  char *location = ask_question("Location: ", "Location: ", is_shelf);
+ char *amount_str = ask_question("Amount: ", "Amount: ", is_number);
  int amount = atoi(amount_str);
- webstore_replenish(webstore, edit, amount);
+ webstore_replenish(webstore, edit, location, amount);
  free(edit);
+  free(location);
  free(amount_str);
 }
 
 static void add_merch(webstore_t *webstore) {
-  puts("");
   char *name = ask_question("Name: ", "Name: ", check_true);
   char *desc = ask_question("Description: ", "Description: ", check_true);
-  char *price_str = ask_question("Price: ", "Price: ", check_true);
+  char *price_str = ask_question("Price: ", "Price: ", is_number);
   int price = atoi(price_str);
   webstore_add_merch(webstore, name, desc, price);
   free(name);
@@ -86,27 +101,90 @@ static void list_merch(webstore_merch_t **merch){
 }
 
 static void create_cart(webstore_t *webstore) {
-  webstore_create_cart(webstore);
+  printf("Cart created with index %d\n", webstore_create_cart(webstore));
 }
 
 static void remove_cart(webstore_t *webstore) {
-  webstore_remove_cart(webstore);
+  char *rm_str = ask_question("Cart: ", "Cart: ", is_number);
+  int rm = atoi(rm_str);
+  if (webstore_remove_cart(webstore, rm)) puts("Cart removed");
+  else puts("\nDoes not exist!");
+  free(rm_str);
 }
 
 static void add_to_cart(webstore_t *webstore) {
-  webstore_add_to_cart(webstore);
+  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  int cart = atoi(cart_str);
+  char *edit = ask_question("Name: ", "Name: ", check_true);
+  char *amount_str = ask_question("Amount: ", "Amount: ", is_number);
+  int amount = atoi(amount_str);
+  int result = webstore_add_to_cart(webstore, edit, amount, cart);
+  switch(result) {
+  case 0 :
+    puts("\nItem does not exist!");
+    break;
+  case 1 :
+    break;
+  case 2 :
+    puts("\nItem not available!");
+    break;
+  case 3 :
+    puts("\nCart does not exist!");
+    break;
+  }
+  free(cart_str);
+  free(edit);
+  free(amount_str);
 }
 
 static void remove_from_cart(webstore_t *webstore) {
-  webstore_remove_from_cart(webstore);
+  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  int cart = atoi(cart_str);
+  char *edit = ask_question("Name: ", "Name: ", check_true);
+  char *amount_str = ask_question("Amount: ", "Amount: ", is_number);
+  int amount = atoi(amount_str);
+  int result = webstore_remove_from_cart(webstore, edit, amount, cart);
+  switch(result) {
+  case 0 :
+    puts("\nItem does not exist!");
+    break;
+  case 1 :
+    break;
+  case 2 :
+    puts("\nNot enough items in cart!");
+    break;
+  case 3 :
+    puts("\nCart does not exist!");
+    break;
+  }
+  free(cart_str);
+  free(edit);
+  free(amount_str);
 }
 
 static void calculate_cost(webstore_t *webstore) {
-  webstore_calculate_cost(webstore);
+  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  int cart = atoi(cart_str);
+  int price = webstore_calculate_cost(webstore, cart);
+  switch(price) {
+  case 0 :
+    puts("\nCart empty!");
+    break;
+  case -1 :
+    puts("\nCart does not exist!");
+    break;
+  default :
+    printf("Total cost of cart %d: %d SEK\n",cart, price);
+  }
+  free(cart_str);
 }
 
 static void checkout(webstore_t *webstore) {
-  webstore_checkout(webstore);
+   char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  int cart = atoi(cart_str);
+  if (!webstore_checkout(webstore, cart))
+    puts("Cart does not exist!");
+  free(cart_str);
 }
 
 void webstore_menu(webstore_t *webstore){

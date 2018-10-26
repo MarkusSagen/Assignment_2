@@ -1,2 +1,2 @@
-main: user_interface.c business_logic.c business_logic.h utils.c utils.h
-	gcc -Wall user_interface.c business_logic.c utils.c
+main: user_interface.c business_logic.c business_logic.h utils.c utils.h hash_table.c hash_table.h linked_list.c linked_list.h iterator.c iterator.h common.h
+	gcc -Wall user_interface.c business_logic.c utils.c hash_table.c linked_list.c iterator.c
