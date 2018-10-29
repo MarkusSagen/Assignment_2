@@ -1,24 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-main: main.c user_interface.c business_logic.c business_logic.h utils.c utils.h hash_table.c hash_table.h linked_list.c linked_list.h iterator.c iterator.h common.h
-	gcc -Wall -pedantic -g main.c user_interface.c business_logic.c utils.c hash_table.c linked_list.c iterator.c 
-
-
-
-
-
-
-
 CC = gcc
 LOADLIBES = -lm
 CFLAGS = -Wall -O2 -g -pedantic -std=c11
