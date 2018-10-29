@@ -42,19 +42,19 @@ Fulla namn   | Kort kommando | Förlaring
 | `make clean` | `make c`       | För att **städa enkelt**  |
 |`make force_clean` | `make fc` | För att **städa effektivt**            |
 |`make clean_force` | `make cf` | För att **städa effektivt**   |
+_________________________________________________________________________
 
-
   <br/>
   <br/>
   <br/>
   <br/>
+  
   ## Dokumentation:
   När programmet väl är startat: Har du 14 val, var av en av dessa val (undo), inte funkar. <br/>
   <br/>
   <br/>
   
-  	MENU
-	――――――――
+
 1	Add Merchandise
 2	List Merchandise
 3	Remove Merchandise
