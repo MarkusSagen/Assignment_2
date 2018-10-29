@@ -50,6 +50,8 @@ _________________________________________________________________________
   <br/>
   
   ## Dokumentation:
+  <br/>
+  <br/>
   När programmet väl är startat: Har du 14 val, var av en av dessa val (undo), inte funkar. <br/>
   <br/>
   <br/>
