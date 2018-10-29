@@ -85,7 +85,7 @@ static void show_stock(webstore_t *webstore) {
 
 // Remove merchandise based on name 
 static void remove_merch(webstore_t *webstore) {
-  char *merch_to_remove = ask_question("Name: ", "Name: ", check_true);	
+  char *merch_to_remove = ask_question("Name: ", "\nCan not be empty!\nName: ", not_empty);	
   // Check if merch exists before removing
 	if (webstore_is_no_item(merch_to_remove, webstore, "merch"))  return;
 	else webstore_remove_merch(webstore, merch_to_remove);
@@ -98,13 +98,13 @@ static void remove_merch(webstore_t *webstore) {
 
 // Edit merchandise based on name 
 static void edit_merch(webstore_t *webstore) {
-  char *merch_to_edit = ask_question("Name: ", "Name: ", check_true); 
+  char *merch_to_edit = ask_question("Name: ", "\nCan not be empty!\nName: ", not_empty); 
   // Check if item exists before editing
   if (webstore_is_no_item(merch_to_edit, webstore, "merch"))	return;
   else {
-	  char *name = ask_question("New name: ", "New name: ", check_true);
+	  char *name = ask_question("New name: ", "\nCan not be empty!\nNew name: ", not_empty);
 	  char *desc = ask_question("New description: ", "New description: ", check_true);
-	  char *price_str = ask_question("New price: ", "New price: ", check_true); //TODO:: - Changed this from name to price
+	  char *price_str = ask_question("New price: ", "\nMust be a number larger than 0!\nNew price: ", is_positive); //TODO:: - Changed this from name to price
 	  int price = atoi(price_str);
 
     webstore_edit_merch(webstore, merch_to_edit, name, desc, price);
@@ -121,12 +121,12 @@ static void edit_merch(webstore_t *webstore) {
 
 // Replenish merchandise based on name and location
 static void replenish(webstore_t *webstore) {
-  char *item_to_replenish = ask_question("Name: ", "Name: ", check_true);
+  char *item_to_replenish = ask_question("Name: ", "\nCan not be empty!\nName: ", not_empty);
   // Check if merch exists before replenishing
   if (webstore_is_no_item(item_to_replenish, webstore, "merch"))	return;
   else {
-	  char *location = ask_question("Location: ", "Location: ", is_shelf);
-	  char *amount_str = ask_question("Amount: ", "Amount: ", is_number);
+	  char *location = ask_question("Location: ", "\nMust be formatted \"X00\"!\nLocation: ", is_shelf);
+	  char *amount_str = ask_question("Amount: ", "\nMust be a number larger than 0!\nAmount: ", is_positive);
 	  int amount = atoi(amount_str);
 
 	  webstore_replenish(webstore, item_to_replenish, location, amount);
@@ -142,12 +142,12 @@ static void replenish(webstore_t *webstore) {
 
 // Add merchendise name, description and price
 static void add_merch(webstore_t *webstore) {
-  char *merch_name = ask_question("Name: ", "Name: ", check_true);
+  char *merch_name = ask_question("Name: ", "\nCan not be empty!\nName: ", not_empty);
   // Check if merch alreday exists before adding new
   if (webstore_is_already_item(merch_name, webstore, "merch")) return;
   else {
 	  char *desc = ask_question("Description: ", "Description: ", check_true);
-	  char *price_str = ask_question("Price: ", "Price: ", is_number);
+	  char *price_str = ask_question("Price: ", "\nMust be a number larger than 0!\nPrice: ", is_positive);
 	  int price = atoi(price_str);
 
 	  webstore_add_merch(webstore, merch_name, desc, price);
@@ -179,7 +179,7 @@ static void create_cart(webstore_t *webstore) {
 
 // Removes a given cart based on cart index number
 static void remove_cart(webstore_t *webstore) {
-  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  char *cart_str = ask_question("Cart: ", "\nMust be a number larger than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
   if (webstore_remove_cart(webstore, cart_index)) puts("Cart removed");
   else puts("\nThe chosen item is not in cart!");
@@ -191,14 +191,14 @@ static void remove_cart(webstore_t *webstore) {
 
 // Adds a given item to a given cart
 static void add_to_cart(webstore_t *webstore) {
-  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  char *cart_str = ask_question("Cart: ", "\nMust be a number larger than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
-  char *item_name = ask_question("Name: ", "Name: ", check_true);
+  char *item_name = ask_question("Name: ", "\nCan not be empty!\nName: ", not_empty);
   
   // Check if item exists before adding to cart
   if (webstore_is_no_item(item_name, webstore, "item"))	return;
   else {
-    char *amount_str = ask_question("Amount: ", "Amount: ", is_number);
+    char *amount_str = ask_question("Amount: ", "\nMust be a number larger than 0!\nAmount: ", is_positive);
     int amount = atoi(amount_str);
     int result = webstore_add_to_cart(webstore, item_name, amount, cart_index);
 
@@ -226,13 +226,13 @@ static void add_to_cart(webstore_t *webstore) {
 
 // Removes a given item form a given cart
 static void remove_from_cart(webstore_t *webstore) {
-  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  char *cart_str = ask_question("Cart: ", "\nMust be a number larger than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
-  char *item_name = ask_question("Name: ", "Name: ", check_true);
+  char *item_name = ask_question("Name: ", "\nCan not be empty!\nName: ", not_empty);
   // Check if item exists before removeing from cart
   if (webstore_is_no_item(item_name, webstore, "item"))	return;
   else {
-    char *amount_str = ask_question("Amount: ", "Amount: ", is_number);
+    char *amount_str = ask_question("Amount: ", "\nMust be a number larger than 0!\nAmount: ", is_positive);
     int amount = atoi(amount_str);
     int result = webstore_remove_from_cart(webstore, item_name, amount, cart_index);
     switch(result) {
@@ -259,7 +259,7 @@ static void remove_from_cart(webstore_t *webstore) {
 
 // Calculates the cost of all items in a given cart
 static void calculate_cost(webstore_t *webstore) {
-  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  char *cart_str = ask_question("Cart: ", "\nMust be a number larger than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
   int price = webstore_calculate_cost(webstore, cart_index);
   switch(price) {
@@ -281,7 +281,7 @@ static void calculate_cost(webstore_t *webstore) {
 
 // Checkout all items in a cart
 static void checkout(webstore_t *webstore) {
-  char *cart_str = ask_question("Cart: ", "Cart: ", is_number);
+  char *cart_str = ask_question("Cart: ", "\nMust be a number larger than 0!\nCart: ", is_positive);
   int cart = atoi(cart_str);
   if (!webstore_checkout(webstore, cart)) puts("\nThe chosen cart does not exist, please choose/add a valid cart!");
   else puts("\nCheckout sucessful!");

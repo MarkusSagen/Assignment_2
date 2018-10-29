@@ -71,3 +71,4 @@ float str_cmp(char *str_in, char *str_ref);
 /// @return Always returns true
 bool check_true();
 
+bool is_positive(char *number);

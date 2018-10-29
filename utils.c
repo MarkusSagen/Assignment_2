@@ -10,10 +10,12 @@
 
 // Checks if a string is an empty string
 bool not_empty(char *str) {
-  return strlen(str) > 0;
+  return str[0] != '\0';
 }
 
-
+bool is_positive(char *number) {
+  return atoi(number)>0;
+}
 
 
 // Checks if asked for shelf has valid shelf name
@@ -151,3 +153,4 @@ float str_cmp(char *in, char *cmp) {
 
   return result;
 }
+
