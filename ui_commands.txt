@@ -1,0 +1,63 @@
+1
+Coca-cola
+En läskande dryck
+10
+1
+Bananasplit
+segt nostalgi godis
+2
+1
+Kaffe
+Livets dryck
+40
+2
+3
+Coca-cola
+1
+Trocadero
+Bättre än Cola :)
+15
+4
+Bananasplit
+Godis
+blandat godis
+1
+6
+Kaffe
+G23
+100
+6
+Godis
+B10
+100000
+6
+Trocadero
+A09
+6
+Trocadero
+H15
+43
+7
+7
+8
+1
+9
+2
+Trocadero
+1000000000
+9
+2
+Trocadero
+10
+9
+2
+Kaffe
+5
+11
+2
+12
+1
+12
+2
+14
+

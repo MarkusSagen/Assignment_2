@@ -11,6 +11,13 @@ struct list
 };
 
 
+
+
+
+
+
+
+// Creates a new empty list
 ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun)
 {
   ioopm_list_t *list = calloc(1, sizeof(ioopm_list_t));
@@ -18,12 +25,20 @@ ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun)
   return list;
 }
 
+
+
+
+// Tear down the linked list and return all its memory 
 void ioopm_linked_list_destroy(ioopm_list_t *list) {
   ioopm_list_t *tmp = list->next;
   free(list);
   if (tmp != NULL) ioopm_linked_list_destroy(tmp);
 }
 
+
+
+
+// Insert at the end of a linked list 
 void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
 {
   ioopm_list_t *tmp = ioopm_linked_list_create(NULL);
@@ -33,10 +48,14 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
   list->size += 1;
 }
 
+
+
+
+// Insert at the start of a linked list
 void ioopm_linked_list_append(ioopm_list_t *list, elem_t value) {
   ioopm_list_t *tmp = ioopm_linked_list_create(NULL);
   tmp->value = value;
-  if (list->last == NULL) { //La till basfall för den tomma listan, fick segfault i testerna annars.
+  if (list->last == NULL) { 
     list->last = tmp;
     list->next = tmp;
   }
@@ -47,6 +66,10 @@ void ioopm_linked_list_append(ioopm_list_t *list, elem_t value) {
   list->size += 1;
 }
 
+
+
+
+// Insert an element into a linked list at valid index [0, n] for a list of n elements
 void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value)
 {
   ioopm_list_t *insert = ioopm_linked_list_create(NULL);
@@ -68,6 +91,10 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value)
   list->size += 1;
 }
 
+
+
+
+//  Retrieve an element from a linked list
 elem_t *ioopm_linked_list_get(ioopm_list_t *list, int index)
 {
   ioopm_list_t *tmp = list->next;
@@ -80,28 +107,7 @@ elem_t *ioopm_linked_list_get(ioopm_list_t *list, int index)
 }
 
 
-/*
-int *ioopm_linked_list_remove(ioopm_list_t *list, int index) {
-  ioopm_list_t *tmp = NULL;
-  ioopm_list_t *tmp_prev;
-  int *tmp_value = calloc(1, sizeof(int));
-  int i=0;
-  while (true) {
-    tmp_prev = tmp;
-    tmp = list->next;
-    if (tmp == NULL) return NULL;
-    if (i==index) {
-      tmp_prev->next = tmp->next;
-      tmp_value = &(tmp->value);
-      free(tmp);
-      list->size -= 1;
-      return tmp_value;
-    }
-    ++i;
-  }
-}
-*/
-
+// Remove an element from a linked list
 elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index) {
   ioopm_list_t **previous = &list;
   while (index > 0) {
@@ -118,6 +124,9 @@ elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index) {
 }
 
 
+
+
+// Test if an element is in the list
 bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
 {
   ioopm_list_t **test = &list;
@@ -129,17 +138,27 @@ bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
 }
 
 
+
+
+// Looksup the number of elements in the linked list 
 int ioopm_linked_list_size(ioopm_list_t *list)
 {
   return list->size;  
 }
 
+
+
+
+// Tests whether a list is empty or not
 bool ioopm_linked_list_is_empty(ioopm_list_t *list) {
   if (list->next == NULL) return true;
   else return false;
 }
 
 
+
+
+// Removes all elements from a linked list
 void ioopm_linked_list_clear(ioopm_list_t *list) {
   ioopm_list_t *tmp = list->next;
   ioopm_list_t *tmp_rm;
@@ -154,6 +173,9 @@ void ioopm_linked_list_clear(ioopm_list_t *list) {
 }
 
 
+
+
+// Tests if a supplied property holds for all elements in a list
 bool ioopm_linked_list_all(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), void *x)
 {
   ioopm_list_t **test = &(list->next);
@@ -164,6 +186,10 @@ bool ioopm_linked_list_all(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), voi
   return true;  
 }
 
+
+
+
+// Tests if a supplied property holds for any element in a list
 bool ioopm_linked_list_any(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), void *x)
 {
   ioopm_list_t **ptr_to_list = &(list->next);
@@ -174,6 +200,10 @@ bool ioopm_linked_list_any(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), voi
   return false;   
 }
 
+
+
+
+// Applies a supplied function to all elements in a list
 void ioopm_linked_apply_to_all(ioopm_list_t *list, void (*fun)(elem_t *, elem_t *), void *x)
 {
   ioopm_list_t **ptr_to_list = &(list->next);

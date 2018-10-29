@@ -6,6 +6,10 @@ typedef struct ioopm_list_iterator ioopm_list_iterator_t;
 typedef struct list ioopm_list_t;
 typedef union intbool intbool_t;
 
+
+
+/// @brief Creates an linked list itorator
+/// @param list, the list the itorator will itorate over
 ioopm_list_iterator_t *ioopm_list_iterator(ioopm_list_t *list);
 
 /// @brief Checks if there are more elements to iterate over
