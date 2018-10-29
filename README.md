@@ -1,21 +1,21 @@
 # Assignment_2
 Assignment 2 for the course IOOPM  HT 2018  
 
-
-Detta program bygger en virituel butik där användaren kan sätta in egna varor i butiken, lägga till eller ta bort varor och även skapa olika kundvangar för att handla saker från sortimentet. 
-Programmet öppnas enklast med något av kommandona nedan i terminalen med den medföljande makefilen.
-Den virituella butiken har 14 val att välja på, som visas på terminalens fönster när programmet körs.
-Skriv in någon av de 14 valen nummer 1-14.  
-För att bekräfta ett val, tryck på enterknappen efter du skrivit in vad vill göra för val.  
-Mer information om funktionernas struktur och uppbyggnad står i dokumentationen för funktionerna  
-För mer information om programmets uppbyggnad och kursen:
-[IOOPM - HT 2018](http://wrigstad.com/ioopm18/assignments/assignment2.html)
+ <br>
+Detta program bygger en virituel butik där användaren kan sätta in egna varor i butiken, lägga till eller ta bort varor och även skapa olika kundvangar för att handla saker från sortimentet.  <br>
+Programmet öppnas enklast med något av kommandona nedan i terminalen med den medföljande makefilen. <br>
+Den virituella butiken har 14 val att välja på, som visas på terminalens fönster när programmet körs.  <br>
+Skriv in någon av de 14 valen nummer 1-14.    <br>
+För att bekräfta ett val, tryck på enterknappen efter du skrivit in vad vill göra för val.    <br>
+Mer information om funktionernas struktur och uppbyggnad står i dokumentationen för funktionerna.  <br>   
+För mer information om programmets uppbyggnad och kursen:  <br>
+[IOOPM - HT 2018](http://wrigstad.com/ioopm18/assignments/assignment2.html)  <br>
 <br/>
 <br/>
-Vi anntar att den input som ges av användare är kompatibel med de jämförelse funktioner som ges.
-Misslyckande att göra detta kan resultera i fel av programmet. 
-Vi förutsätter att användare tar del av dokumentationen. 
-Dock bör programmet skydda mot felaktig användning (Exempelvis: försöka ta bort element som inte finns)
+Vi anntar att den input som ges av användare är kompatibel med de jämförelse funktioner som ges.  <br>
+Misslyckande att göra detta kan resultera i fel av programmet.   <br>
+Vi förutsätter att användare tar del av dokumentationen.   <br> 
+Dock bör programmet skydda mot felaktig användning (Exempelvis: försöka ta bort element som inte finns)  <br>
 <br/>
 <br/>
 <br/>
