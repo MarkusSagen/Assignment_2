@@ -7,10 +7,12 @@ Programmet öppnas enklast med något av kommandona nedan i terminalen med den m
 Den virituella butiken har 14 val att välja på, som visas på terminalens fönster när programmet körs.  <br/>
 Skriv in någon av de 14 valen nummer 1-14.    <br/>
 För att bekräfta ett val, tryck på enterknappen efter du skrivit in vad vill göra för val.    <br/>
-Mer information om funktionernas struktur och uppbyggnad står i dokumentationen för funktionerna.  <br/>   
-En doxygen dokumentation följer också med, men som zip fil. <br/>
-För att läsa doxygen dokumentation, packa först upp den. <br/>
-Navigera till mappen "html" och klicka på filen "index.html" </br>
+<br/>
+Mer information om funktionernas struktur och uppbyggnad står det att läsa både i dokumentationen för funktionerna och i den bifogade doxygen dokumentationen.  
+<br/>   
+<br/>
+För att läsa doxygen dokumentation, packa först upp zip filen "doxy" <br/>
+Navigera sedan till mappen "html" och klicka på filen "index.html" för att se dokumentation av programmet </br>
 
 För mer information om programmets uppbyggnad och kursen:  <br/> 
 http://wrigstad.com/ioopm18/assignments/assignment2.html  
