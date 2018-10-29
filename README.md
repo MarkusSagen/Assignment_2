@@ -54,21 +54,27 @@ _________________________________________________________________________
   <br/>
   <br/>
   
+  
+  
+  Fulla namn   | Förlaring
+------------ |----------------------------------
+|`1`  | Add Merchandise |
+|`2`  | List Merchandise |
+|`3`  | Remove Merchandise   |
+|`4`  | Edit Merchandise  |
+|`5`  | Show Stock  |
+|`6`  | Replenish           |
+|`7`  | Create Cart  |
+|`8`  | Remove Cart  |
+|`9`  | Add To Cart    |
+|`10` | Remove From Cart   |
+|`11` | Calcute Cost    |
+|`12` | Checkout   |
+|`13` | Undo (Inte implimenterad ännu) |
+|`14` | Quit  |
+_________________________________________________________________________
 
-1	Add Merchandise
-2	List Merchandise
-3	Remove Merchandise
-4	Edit Merchandise
-5	Show Stock
-6	Replenish
-7	Create Cart
-8	Remove Cart
-9	Add To Cart
-10	Remove From Cart
-11	Calcute Cost
-12	Checkout
-13	Undo
-14	Quit
+
   
   <br>
   <br/>
