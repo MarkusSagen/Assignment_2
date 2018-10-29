@@ -8,6 +8,10 @@ Den virituella butiken har 14 val att välja på, som visas på terminalens fön
 Skriv in någon av de 14 valen nummer 1-14.    <br/>
 För att bekräfta ett val, tryck på enterknappen efter du skrivit in vad vill göra för val.    <br/>
 Mer information om funktionernas struktur och uppbyggnad står i dokumentationen för funktionerna.  <br/>   
+En doxygen dokumentation följer också med, men som zip fil. <br/>
+För att läsa doxygen dokumentation, packa först upp den. <br/>
+Navigera till mappen "html" och klicka på filen "index.html" </br>
+
 För mer information om programmets uppbyggnad och kursen:  <br/> 
 http://wrigstad.com/ioopm18/assignments/assignment2.html  
 <br/> 
