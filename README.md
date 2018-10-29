@@ -46,7 +46,9 @@ Fulla namn   | Kort kommando | Förlaring
 
   <br/>
   <br/>
-  ##### Dokumentation:
+  <br/>
+  <br/>
+  ## Dokumentation:
   När programmet väl är startat: Har du 14 val, var av en av dessa val (undo), inte funkar. <br/>
   <br/>
   <br/>
