@@ -9,7 +9,8 @@ Skriv in någon av de 14 valen nummer 1-14.    <br>
 För att bekräfta ett val, tryck på enterknappen efter du skrivit in vad vill göra för val.    <br>
 Mer information om funktionernas struktur och uppbyggnad står i dokumentationen för funktionerna.  <br>   
 För mer information om programmets uppbyggnad och kursen:  <br>
-[IOOPM - HT 2018](http://wrigstad.com/ioopm18/assignments/assignment2.html)  <br>
+[IOOPM HT 2018](http://wrigstad.com/ioopm18/assignments/assignment2.html)  
+<br>
 <br/>
 <br/>
 Vi anntar att den input som ges av användare är kompatibel med de jämförelse funktioner som ges.  <br>
