@@ -5,7 +5,7 @@
 /* Decalration of typedef */
 
 typedef struct list ioopm_list_t;
-typedef unsigned long(*ioopm_hash_function)(elem_t key);
+typedef unsigned long (*ioopm_hash_function)(elem_t key);
 
 
 

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "utils.h"
+#include "common.h"
 
 
 
@@ -90,10 +91,17 @@ char* ask_question(char *question, char *error_msg, check_func check) {
 
 // Checks if answer to a given question is yes
 bool yes_no() {
+  bool answer;
   char *str_in = read_string();
   float score = str_cmp(str_in, "y");
-  if (score>=3 || str_in[0]=='\0') return true; 
-  else return false;
+
+
+  if (score>=3 || str_in[0]=='\0') answer = true; 
+  else answer = false;
+   
+  // MAYBE MEMLEAK
+  free(str_in);
+  return answer;
 }
 
 

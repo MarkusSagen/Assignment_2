@@ -1,5 +1,6 @@
 #pragma once
 #include "hash_table.h"
+#include "common.h"
 typedef struct stock webstore_stock_t;
 typedef struct merch webstore_merch_t;
 typedef struct webstore webstore_t;
@@ -144,11 +145,30 @@ bool webstore_is_already_item(char *name, webstore_t *webstore, char *searched_f
 bool webstore_is_no_item(char *name, webstore_t *webstore,  char *searched_for_ware);
 
 
-
 /// @brief Creates the UI for the webstore menu
 /// @param Webstore, the webstore the users can interact with
 void webstore_menu(webstore_t *webstore);
 
+
+
+
+////////TODO!!!!!!
+
+
+
+/// @brief Creates the UI for the webstore menu
+/// @param Webstore, the webstore the users can interact with
 elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t elem);
 
+
+/// @brief Creates the UI for the webstore menu
+/// @param Webstore, the webstore the users can interact with
 int webstore_amount_in_stock(webstore_t *webstore, char *name);
+
+
+/// @brief Creates the UI for the webstore menu
+/// @param Webstore, the webstore the users can interact with
+bool webstore_is_not_cart(webstore_t *webstore, int index);
+
+
+

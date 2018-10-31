@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 #include "linked_list.h"
 #include "iterator.h"
 #include "hash_table.h"
@@ -36,17 +37,21 @@ struct hash_table
 
 // Find the previous entry for a given key - returns Null if not found
 entry_t *find_previous_entry_for_key(ioopm_hash_table_t *ht, elem_t key) {
-  int hash;
+  unsigned long hash;                      // Max size of 1.19 x 10^4932
+
   if (ht->hashfun == NULL) hash = key.i; 
   else  hash = ht->hashfun(key);
+
+  //printf("hash is now: %.0Lf\n", hash);
+  
   if (hash>0) {
     /// Calculate the bucket for this entry
     int bucket = hash % ht->size;
     entry_t *tmp = &ht->buckets[bucket];
     entry_t *tmp_prev = tmp;
     while (true) {
-      if (tmp->hash >= hash) {return tmp_prev;}
-      if (tmp->next == NULL) {return tmp;}
+      if (tmp->hash >= hash) return tmp_prev;
+      if (tmp->next == NULL) return tmp;
       tmp_prev = tmp;
       tmp = tmp->next;
     }
@@ -64,8 +69,8 @@ entry_t *find_previous_rehash(ioopm_hash_table_t *ht, int hash) {
     entry_t *tmp = &ht->buckets[bucket];
     entry_t *tmp_prev = tmp;
     while (1) {
-      if (tmp->hash >= hash) {return tmp_prev;}
-      if (tmp->next == NULL) {return tmp;}
+      if (tmp->hash >= hash) return tmp_prev;
+      if (tmp->next == NULL) return tmp;
       tmp_prev = tmp;
       tmp = tmp->next;
     }
