@@ -4,7 +4,7 @@ webstore:
 
 memwebstore:
 	gcc -Wall -pedantic -g main.c business_logic.c hash_table.c linked_list.c utils.c user_interface.c  
-	valgrind -v --leak-check=full ./a.out
+	valgrind --leak-check=full ./a.out
 
 
 test:
