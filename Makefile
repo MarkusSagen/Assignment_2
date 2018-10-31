@@ -1,10 +1,10 @@
 webstore:
-	gcc -Wall -pedantic -g main.c business_logic.c hash_table.c linked_list.c utils.c user_interface.c
+	gcc -Wall -pedantic -g main.c business_logic.c hash_table.c linked_list.c utils.c user_interface.c 
 	./a.out
 
 memwebstore:
-	gcc -Wall -pedantic -g main.c business_logic.c hash_table.c linked_list.c utils.c user_interface.c
-	valgrind ./a.out
+	gcc -Wall -pedantic -g main.c business_logic.c hash_table.c linked_list.c utils.c user_interface.c  
+	valgrind -v --leak-check=full ./a.out
 
 
 test:

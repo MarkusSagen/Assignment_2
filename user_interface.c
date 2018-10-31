@@ -62,8 +62,8 @@ int webstore_menu_ui() {
 	    if (score > calc_likely_choise) {
 		    calc_likely_choise = score;
 		    make_choise_from_likely = i;
-	   	}
-	 	}
+	   	 }
+	   }
 
     // Free the choise for the made choise
     free(choise_made);
@@ -75,12 +75,12 @@ int webstore_menu_ui() {
 	    score = str_cmp(guess_best_choise, "y");
 
 	    if (score >= 3 || guess_best_choise[0] == '\0') {
-        free(guess_best_choise);
-        return (make_choise_from_likely + 1);
-      } 
-      
-      free(guess_best_choise);
+       	  free(guess_best_choise);
+          return (make_choise_from_likely + 1);
+        } 
+             free(guess_best_choise);
 	  }
+
   }
 
   // If no valid choise were made, print the UI again to the user
@@ -103,8 +103,8 @@ static void remove_merch(webstore_t *webstore) {
   char *merch_to_remove = ask_question("Which merchendise: ", "\nMust enter at least one word!\nWhich merchendise: ", not_empty);	
 
   // Check if merch exists before removing
-	if (webstore_is_no_item(merch_to_remove, webstore, "merch"));
-	else  webstore_remove_merch(webstore, merch_to_remove);
+  if (webstore_is_no_item(merch_to_remove, webstore, "merch"));
+  else webstore_remove_merch(webstore, merch_to_remove);
 
   free(merch_to_remove);
 }
@@ -121,7 +121,7 @@ static void edit_merch(webstore_t *webstore) {
   else {
 	  char *name = ask_question("New name for item: ", "\nCan not be empty!\nNew name: ", not_empty);
 	  char *desc = ask_question("New description: ", "New description: ", check_true);
-	  char *price_str = ask_question("New price: ", "\nCart index must be a number larger than 0!\nNew price: ", is_positive); //TODO:: - Changed this from name to price
+	  char *price_str = ask_question("New price: ", "\nCart index must be a number larger than 0!\nNew price: ", is_positive); 
 	  int price = atoi(price_str);
 
     webstore_edit_merch(webstore, merch_to_edit, name, desc, price);

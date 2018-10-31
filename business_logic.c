@@ -154,9 +154,9 @@ void webstore_remove_merch(webstore_t *webstore, char *remove) {
     webstore_stock_t **stock = &(*merch)->stock;
 
     while (*stock) {
-      free((*stock)->location);
       webstore_stock_t *stock_to_remove = *stock;
       stock = &(*stock)->next;
+      free((*stock)->location);
       free(stock_to_remove);
     }
 
