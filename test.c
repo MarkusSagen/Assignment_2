@@ -14,7 +14,7 @@
 #include <math.h>
 
 
-// Helper funtion - Prints out if there is item stored with that name
+// Helper function - Prints out if there is item stored with that name
 bool webstore_is_item_AUX(webstore_t *webstore, char *name) {
   elem_t key = {.p = name};
   if  (webstore_hash_lookup(webstore, key)) {
@@ -58,10 +58,6 @@ void webstore_add_merch_test(void)
     webstore_add_merch(webstore, "hjjkhasjkdasdj", desc, price);
     CU_ASSERT_TRUE(webstore_is_item_AUX(webstore, "hjjkhasjkdasdj"));
 
-
-    // Check item in store
-    webstore_add_merch(webstore, "", desc, price);
-    CU_ASSERT_FALSE(webstore_is_item_AUX(webstore, ""));
 
     // Check item in store
     webstore_add_merch(webstore, "sg2666asd!", desc, price);
@@ -266,6 +262,7 @@ void webstore_add_to_cart_test(void)
     webstore_t *webstore = webstore_init();
     
     char *name = "cola";
+    char *item_fail2 = "gksa2r1";
     char *desc = "en cola burk";
     int price = 1;
     char *location = "A20";
@@ -281,32 +278,26 @@ void webstore_add_to_cart_test(void)
     CU_ASSERT_EQUAL(test1_fail0, 0);
     
 	// Test adding merch not in stock yet
-	 int test1_fail2 = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
-    CU_ASSERT_EQUAL(test1_fail0, 0);
+	int test1_fail = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
+    CU_ASSERT_EQUAL(test1_fail, 0);
 
-    webstore_add_merch(webstore, name, desc, price);
-
+    // Test adding item in stock 
     webstore_add_merch(webstore, item_fail2, desc, price);
-
-    webstore_replenish(webstore, name, location, in_amount);
-    
-  
-
-    int success = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
-    CU_ASSERT_EQUAL(success, 1);
-
-    
-// Test adding item t in stock 
     int fail2 = webstore_add_to_cart(webstore, item_fail2, take_amount, cart_nr1);
     CU_ASSERT_EQUAL(fail2, 2);
-    
+
+
+    // Test adding correct item
+    webstore_add_merch(webstore, name, desc, price);
+    webstore_replenish(webstore, name, location, in_amount);
+    int success = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
+    CU_ASSERT_EQUAL(success, 1);
 
 	// Test add to not found cart    
     int fail3 = webstore_add_to_cart(webstore, name, take_amount, cart_select_fail3);
     CU_ASSERT_EQUAL(fail3, 3);
 
     webstore_remove(webstore);
-
 }
 
 
@@ -377,14 +368,16 @@ void webstore_remove_cart_test(void)
 
 
 
-//TODO
+
+
+
+
 void webstore_remove_from_cart_test(void)
 {
     webstore_t *webstore = webstore_init();
     
     char *name = "cola";
     char *item_fail0 = "Ogiltigt";
-    int fail_amount2 = 99999;
     char *desc = "en cola burk";
     int price = 1;
     char *location = "A20";
@@ -394,31 +387,33 @@ void webstore_remove_from_cart_test(void)
     int cart_fail3 = 99;
 
     
-    
-    // Add items
     webstore_add_merch(webstore, name, desc, price);
     webstore_replenish(webstore, name, location, in_amount);
-    
-    
     int cart_nr1 = webstore_create_cart(webstore);
-    webstore_add_to_cart(webstore, name, get_amount, cart_nr1); // now has 5 colas
-    
-    
-    
-    
-    int success = webstore_remove_from_cart(webstore, name, take_amount, cart_nr1 );
-    CU_ASSERT_EQUAL(success, 1);
-    
-    
+
+
+
+    // Try to remove item that dont exist
     int fail_0 = webstore_remove_from_cart(webstore, item_fail0, take_amount, cart_nr1 );
     CU_ASSERT_EQUAL(fail_0, 0);
-    
-    int fail_3 =webstore_remove_from_cart(webstore, name, take_amount, cart_fail3 );
-    CU_ASSERT_EQUAL(fail_3, 3);
-    
-    int fail_2 = webstore_remove_from_cart(webstore, name, fail_amount2, cart_nr1 );
+
+
+    // Try to remove to much
+    webstore_add_to_cart(webstore, name, get_amount, cart_nr1);
+    int fail_2 = webstore_remove_from_cart(webstore, name, 99999, cart_nr1 );
     CU_ASSERT_EQUAL(fail_2, 2);
-    
+
+
+    // Try remove item from not found cart
+    webstore_add_to_cart(webstore, name, get_amount, cart_nr1);
+    int fail_3 = webstore_remove_from_cart(webstore, name, take_amount, cart_fail3 );
+    CU_ASSERT_EQUAL(fail_3, 3);
+
+
+    // Removed item from cart
+    int success = webstore_remove_from_cart(webstore, name, take_amount, cart_nr1 );
+    CU_ASSERT_EQUAL(success, 1);
+
 
     
     webstore_remove(webstore);
@@ -426,7 +421,9 @@ void webstore_remove_from_cart_test(void)
 
 
 
-//TODO
+
+
+
 void webstore_calculate_cost_test(void)
 {
      webstore_t *webstore = webstore_init();
@@ -465,7 +462,6 @@ void webstore_calculate_cost_test(void)
     
     
     // Assert tests
-    
     int success = webstore_calculate_cost(webstore, cart_nr1);
     CU_ASSERT_EQUAL(success, 200);
     
@@ -482,7 +478,9 @@ void webstore_calculate_cost_test(void)
 
 
 
-//TODO
+
+
+
 void webstore_checkout_test(void)
 {
 webstore_t *webstore = webstore_init();
@@ -500,8 +498,6 @@ webstore_t *webstore = webstore_init();
     char *location2 = "A20";
     int in_amount2 = 200;
     int get_amount2 = 10;
-
-    
     int cart_fail1 = 99;
     
     
@@ -545,18 +541,18 @@ webstore_t *webstore = webstore_init();
 
 
 int main()
-{
-    
+{ 
     //// Initialize initials
     CU_pSuite pSuiteEntries     = NULL;
     
     
     
     //// Initialize and print error messages if errors
-    if (CUE_SUCCESS != CU_initialize_registry())
-        return CU_get_error();
+    if (CUE_SUCCESS != CU_initialize_registry()) return CU_get_error();
     
     
+
+
     //// Here we start to assert tests
     pSuiteEntries   = CU_add_suite("Test all functions with insertion and removal: ", init_entries, clear_entries);
    
@@ -576,10 +572,10 @@ int main()
     //// Test Hash table
     // Testing hashtable create and destroy
     if (
-	(NULL == CU_add_test( pSuiteEntries, "Test add_merch()", webstore_add_merch_test)) ||
-	(NULL == CU_add_test( pSuiteEntries, "Test remove_merch()", webstore_remove_merch_test)) ||
-	(NULL == CU_add_test( pSuiteEntries, "Test edit_merch()", webstore_edit_merch_test)) ||
-	(NULL == CU_add_test( pSuiteEntries, "Test replenish()", webstore_replenish_test)) ||
+        (NULL == CU_add_test( pSuiteEntries, "Test add_merch()", webstore_add_merch_test)) ||
+        (NULL == CU_add_test( pSuiteEntries, "Test remove_merch()", webstore_remove_merch_test)) ||
+        (NULL == CU_add_test( pSuiteEntries, "Test edit_merch()", webstore_edit_merch_test)) ||
+        (NULL == CU_add_test( pSuiteEntries, "Test replenish()", webstore_replenish_test)) ||
 
         (NULL == CU_add_test( pSuiteEntries, "Test create_cart()", webstore_create_cart_test)) ||
         (NULL == CU_add_test( pSuiteEntries, "Test remove_cart()", webstore_remove_cart_test)) ||
@@ -587,10 +583,10 @@ int main()
         (NULL == CU_add_test( pSuiteEntries, "Test remove_from_cart()", webstore_remove_from_cart_test)) ||
         (NULL == CU_add_test( pSuiteEntries, "Test calculate_cost()", webstore_calculate_cost_test)) ||
         (NULL == CU_add_test( pSuiteEntries, "Test checkout()", webstore_checkout_test)))    
-{
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
+        {
+            CU_cleanup_registry();
+            return CU_get_error();
+        }
     
     
     
