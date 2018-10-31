@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <math.h>
 #include "utils.h"
 #include "business_logic.h"
 
 /* Declaration of global variables */
 #define webstore_list_len (int)(sizeof(list)/sizeof(list[0])) -1
 #define No_Buckets 17
+#define INITIAL_HASH_CONSTANT 5381    // Initial value for hash function
+#define HASH_MOD_SHIFT 33 
 
 
 
@@ -54,20 +57,20 @@ void show_stock_aux(webstore_t *webstore) {
   elem_t key = {.p = name};
   elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
   
-  // Check if item exists before showing stock
-  if (!elem) {
-    puts("\nThis item does not exist!");
-    return;
-  }
+  if (!elem) puts("\nThis merch does not exist!");
+  else {
+    webstore_stock_t *stock = (*((webstore_merch_t**)(elem->p)))->stock;
+    
+    // Print text to help the user understand 
+    if (!stock) puts("Amount: 0");
 
-  // Display where and how many there are in stock of the merch
-	webstore_stock_t *stock = (*((webstore_merch_t**)(elem->p)))->stock;
-
-	puts("");
-	while (stock){
+	  puts("");
+	  while (stock){
       printf("%s: %d\n", stock->location, stock->amount);
       stock = stock->next;
-	}
+	  }
+    
+  }
   
   free(name);
 }
@@ -89,6 +92,7 @@ static void delete_merch(webstore_merch_t *merch) {
 // Removes a given item from a given cart 
 static void remove_item_from_carts(webstore_t *webstore, webstore_merch_t *merch) {
   webstore_cart_t **cart = &webstore->cart;
+
   while (*cart) {
     webstore_cart_item_t **item = &(*cart)->items;
     while (*item) {
@@ -100,7 +104,8 @@ static void remove_item_from_carts(webstore_t *webstore, webstore_merch_t *merch
       else item = &(*item)->next;
     }
 
-    cart = &(*cart)->next; }
+    cart = &(*cart)->next; 
+  }
 }
 
 
@@ -109,26 +114,28 @@ static void remove_item_from_carts(webstore_t *webstore, webstore_merch_t *merch
 // Adds merch to webstore based on unique name
 void webstore_add_merch(webstore_t *webstore, char *name, char *desc, int price) {
   elem_t key = {.p = strdup(name)};
-  if (ioopm_hash_table_lookup(webstore->hash, key)) {
-    // puts("\nItem already exists!"); //TODO:: Commented out
-    free(key.p);
-    return;
-  }
 
-  webstore_merch_t *new_merch = malloc(sizeof(webstore_merch_t));
-  new_merch->name = strdup(name);
-  new_merch->description = strdup(desc);
-  new_merch->price = price;
-  webstore_merch_t **merch = &webstore->merch;
+  //TODO : Could be leak
   
-  while ((*merch) && strcmp((*merch)->name, new_merch->name) <= 0) {
-    merch = &(*merch)->next;
-  }
 
-  new_merch->next = (*merch);
-  *merch = new_merch;
-  elem_t value = {.p = merch};
-  ioopm_hash_table_insert(&webstore->hash, key, value);
+  // Checks if already merch with that name 
+  if (ioopm_hash_table_lookup(webstore->hash, key));
+  else {
+    webstore_merch_t *new_merch = calloc(1, sizeof(webstore_merch_t));
+
+    new_merch->name = strdup(name);
+    new_merch->description = strdup(desc);
+    new_merch->price = price;
+    webstore_merch_t **merch = &webstore->merch;
+    
+    while ((*merch) && strcmp((*merch)->name, new_merch->name) <= 0) merch = &(*merch)->next;
+    
+    new_merch->next = (*merch);
+    *merch = new_merch;
+    elem_t value = {.p = merch};
+    // printf("hash table hash is: %lu\n", webstore->hash);
+    ioopm_hash_table_insert(&webstore->hash, key, value);
+  }
 }
 
 
@@ -137,26 +144,25 @@ void webstore_add_merch(webstore_t *webstore, char *name, char *desc, int price)
 void webstore_remove_merch(webstore_t *webstore, char *remove) {
   elem_t key = {.p = remove};
   elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
-  if (!elem) {
-    // puts("\nDoes not exist!"); //TODO:: Commented out
-    return;
+
+  if (!elem);
+  else {
+    webstore_merch_t **merch = (webstore_merch_t**)elem->p;
+    webstore_merch_t *merch_to_remove = *merch;
+    remove_item_from_carts(webstore, *merch);
+    webstore_stock_t **stock = &(*merch)->stock;
+
+    while (*stock) {
+      free((*stock)->location);
+      webstore_stock_t *stock_to_remove = *stock;
+      stock = &(*stock)->next;
+      free(stock_to_remove);
+    }
+
+    *merch = (*merch)->next;
+    delete_merch(merch_to_remove);
+    ioopm_hash_table_remove(webstore->hash, key);
   }
-
-  webstore_merch_t **merch = (webstore_merch_t**)elem->p;
-  webstore_merch_t *merch_to_remove = *merch;
-  remove_item_from_carts(webstore, *merch);
-  webstore_stock_t **stock = &(*merch)->stock;
-
-  while (*stock) {
-    free((*stock)->location);
-    webstore_stock_t *stock_to_remove = *stock;
-    stock = &(*stock)->next;
-    free(stock_to_remove);
-  }
-
-  *merch = (*merch)->next;
-  delete_merch(merch_to_remove);
-  ioopm_hash_table_remove(webstore->hash, key);
 }
 
 
@@ -165,22 +171,20 @@ void webstore_remove_merch(webstore_t *webstore, char *remove) {
 // Edits an existing merchendise based on name
 void webstore_edit_merch(webstore_t *webstore, char *merch_to_edit, char *name, char *desc, int price) {
   elem_t key = {.p = merch_to_edit};
-   elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
-   if (!elem) {
-      // puts("\nDoes not exist!"); //TODO:: Commented out
-      return;
-   }
-
-  webstore_merch_t **merch = (webstore_merch_t**)elem->p;
-  elem_t value = {.p = merch};
-  ioopm_hash_table_remove(webstore->hash, key);
-  key.p = strdup(name);
-  ioopm_hash_table_insert(&webstore->hash, key, value);
-  free((*merch)->name);
-  free((*merch)->description);
-  (*merch)->name = strdup(name);
-  (*merch)->description = strdup(desc);
-  (*merch)->price = price;
+  elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
+  if (!elem);
+  else {
+    webstore_merch_t **merch = (webstore_merch_t**)elem->p;
+    elem_t value = {.p = merch};
+    ioopm_hash_table_remove(webstore->hash, key);
+    key.p = strdup(name);
+    ioopm_hash_table_insert(&webstore->hash, key, value);
+    free((*merch)->name);
+    free((*merch)->description);
+    (*merch)->name = strdup(name);
+    (*merch)->description = strdup(desc);
+    (*merch)->price = price;
+  }
 }
 
 
@@ -191,18 +195,17 @@ void webstore_replenish(webstore_t *webstore, char *merch_to_rep, char *location
   elem_t key = {.p = merch_to_rep};
   elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
 
-  if (!elem) { // puts("\nDoes not exist!");   //TODO:: Commented out
-    return;
-  }
+  if (!elem || amount<1);
+  else {
+    webstore_merch_t **merch = (webstore_merch_t**)elem->p;
+    (*merch)->available += amount;
+    webstore_stock_t **stock = &(*merch)->stock;
 
-  webstore_merch_t **merch = (webstore_merch_t**)elem->p;
-  (*merch)->available += amount;
-  webstore_stock_t **stock = &(*merch)->stock;
+    while ((*stock) && (strcmp((*stock)->location, location) < 0)) stock = &(*stock)->next;
 
-  while ((*stock) && strcmp((*stock)->location, location) < 0) stock = &(*stock)->next; {
     if ((*stock) && strcmp((*stock)->location, location) == 0) (*stock)->amount += amount;
     else {
-      webstore_stock_t *new_stock = malloc(sizeof(webstore_stock_t));
+      webstore_stock_t *new_stock = calloc(1, sizeof(webstore_stock_t));
       new_stock->amount = amount;
       new_stock->location = strdup(location);
       new_stock->next = (*stock);
@@ -246,8 +249,23 @@ int webstore_create_cart(webstore_t *webstore) {
 
   *cart = new_cart;
   new_cart->index = ++index;
+
   return index;
 }
+
+
+// Checks if a given index of a cart is stored in the webstore
+bool webstore_is_not_cart(webstore_t *webstore, int index) {
+  webstore_cart_t **cart = &webstore->cart;
+
+  while(*cart) {
+    if (index == (*cart)->index) return false;
+    cart = &(*cart)->next;
+  }
+
+  return true;
+}
+
 
 
 
@@ -283,7 +301,9 @@ bool webstore_remove_cart(webstore_t *webstore, int cart_to_remove) {
       return true;
     }
 
-    cart = &(*cart)->next; }
+    cart = &(*cart)->next; 
+  }
+
   return false;
 }
 
@@ -321,11 +341,13 @@ int webstore_add_to_cart(webstore_t *webstore, char *item_to_add, int amount, in
       new_item->merch = *merch;
       *item = new_item;
     
+      // if item exists and is available to add
       return 1;  
     }
 
-  cart = &(*cart)->next; }
-// If a specified cart did not exist
+    cart = &(*cart)->next; 
+  }
+// If a specified cart did not exist - Invalid cart should not be able to enter
 return 3;
 }
 
@@ -337,6 +359,7 @@ int webstore_remove_from_cart(webstore_t *webstore, char *item_to_remove, int am
   elem_t key = {.p = item_to_remove};
   elem_t *selected_item = ioopm_hash_table_lookup(webstore->hash, key);
 
+  // If the item doesn't exist
   if (!selected_item) return 0;
   webstore_merch_t **merch = (webstore_merch_t**)selected_item->p;
   webstore_cart_t **cart = &webstore->cart;
@@ -344,6 +367,7 @@ int webstore_remove_from_cart(webstore_t *webstore, char *item_to_remove, int am
   while (*cart) {
     if ((*cart)->index == cart_selected) {
       webstore_cart_item_t **item = &(*cart)->items;
+
       while (*item) {
         if ((*item)->merch == (*merch)) {
           if ((*item)->amount >= amount){
@@ -355,13 +379,23 @@ int webstore_remove_from_cart(webstore_t *webstore, char *item_to_remove, int am
               *item = (*item)->next;
               free(item_to_remove);
             }
-            return 1; }
-          return 2; }
+
+            // Removed the item correctly
+            return 1; 
+          }
+
+          // Tried to remove to many of the item
+          return 2; 
+        }
+
         item = &(*item)->next;
       }
     }
 
-    cart = &(*cart)->next; }
+    cart = &(*cart)->next; 
+  }
+  
+  // The cart chosen was not a valid cart - Should not come here
   return 3;
 }
 
@@ -381,8 +415,15 @@ int webstore_calculate_cost(webstore_t *webstore, int cart_selected) {
         item = item->next;
       }
       
-      return cost; }
-    cart = &(*cart)->next; }
+      // Returns the cost of all items in the cart
+      // If cost is 0 - It will be interpreted as an error message
+      return cost; 
+    }
+
+    cart = &(*cart)->next; 
+  }
+
+  // Returns -1 if no cart selected - Should not happen
   return -1;
 }
 
@@ -394,7 +435,6 @@ bool webstore_checkout(webstore_t *webstore, int cart_selected) {
   webstore_cart_t **cart = &webstore->cart;
   
   while (*cart) {
-    
     if ((*cart)->index == cart_selected) {
       webstore_cart_item_t *item = (*cart)->items;
       
@@ -403,7 +443,6 @@ bool webstore_checkout(webstore_t *webstore, int cart_selected) {
         webstore_stock_t **stock = &item->merch->stock;
         
         while (amount>0) {
-
           if ((*stock)->amount <= amount) {
             free((*stock)->location);
             webstore_stock_t *rm = (*stock);
@@ -417,14 +456,18 @@ bool webstore_checkout(webstore_t *webstore, int cart_selected) {
           }
         }
 
-        item = item->next;  }
+        item = item->next;  
+      }
 
       webstore_cart_t *cart_rm = *cart;
       *cart = (*cart)->next;
       delete_cart(cart_rm);
-      return true;  }
+      return true;  
+    }
 
-    cart = &(*cart)->next;  }
+    cart = &(*cart)->next;  
+  }
+
   return false;
 }
 
@@ -439,18 +482,43 @@ void webstore_undo(webstore_t *webstore) {
 
 
 
-// Calculate hash for string based on ASCII number for string
-static unsigned long string_sum_hash(const elem_t ware) {
-  unsigned long result = 0;
-  char *tmp_hash_str = (char *)ware.p;
-  // Get a has function for entries and shift logical left 3 steps
-  while (*++tmp_hash_str != '\0') {
-      result +=  *tmp_hash_str;
-      result *= 1000;
-  }
-  result = result/1000;   // Divide by thousand - Don't need the logical shift left for last entry.
-  return result;
+// // Calculate hash based on a variation of the hash function "djb2" by Dan Bernstein.
+// static long double string_sum_hash(const elem_t ware) {
+//   char *str = (char *)ware.p;
+//   long double hash = INITIAL_HASH_CONSTANT;     // Initialized to 5381, based on the modular arithmetic 
+//   int c = *str;
+
+//   /* The resulting hash will be at first:         5381 * 33 + c */
+//   while (c != 0) {
+//       hash = hash * HASH_MOD_SHIFT + c;  
+//       c = *(++str);
+//   }
+
+//   hash = round(hash);
+//   return hash;
+// }
+
+
+// Calculate hash as the sum of all strings in ascii
+static long double string_sum_hash(const elem_t ware) {
+    char *str = ware.s;
+    long double result = 0;
+    do
+    {
+        result += *str;
+    }
+    while (*++str != '\0');
+    return result;
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -475,13 +543,38 @@ webstore_t *webstore_init() {
 
 // Removes an entire webstore and all merch 
 void webstore_remove(webstore_t *webstore) {
+ioopm_hash_table_destroy(webstore->hash);
   webstore_merch_t **merch = &webstore->merch;
   webstore_merch_t *merch_to_remove;
 
   while(*merch) {
+    webstore_stock_t **stock = &(*merch)->stock;
+    while (*stock) {
+        webstore_stock_t *stock_rm = *stock;
+        stock = &(*stock)->next;
+        free(stock_rm->location);
+        free(stock_rm);
+      }
+
     merch_to_remove = *merch;
     delete_merch(merch_to_remove);
     merch = &(*merch)->next;
+  }
+
+  webstore_cart_t **cart = &webstore->cart;
+
+  while (*cart) {
+    webstore_cart_item_t **carts = &(*cart)->items;
+
+    while (*carts) {
+      webstore_cart_item_t *carts_rm = *carts;
+      carts = &(*carts)->next;
+      free(carts_rm);
+    }
+
+    webstore_cart_t *cart_rm = *cart;
+    cart = &(*cart)->next;
+    free(cart_rm);
   }
 
   free(webstore);
@@ -490,11 +583,10 @@ void webstore_remove(webstore_t *webstore) {
 
 // Helper funtion - Prints out if there already exists item with that name
 bool webstore_is_already_item(char *name, webstore_t *webstore, char *searched_for_ware) {
-  elem_t key = {.p = strdup(name)};
+  elem_t key = {.p = name};
   if  (ioopm_hash_table_lookup(webstore->hash, key)) {
-	printf("\nThis %s already exists! \n", searched_for_ware);
-	free(key.p);
-	return true;
+	  printf("\nThis %s already exists! \n", searched_for_ware);
+	  return true;
   }
 
   return false; 
@@ -505,16 +597,40 @@ bool webstore_is_already_item(char *name, webstore_t *webstore, char *searched_f
 
 // Helper funtion - Prints out if there is no item with that name
 bool webstore_is_no_item(char *name, webstore_t *webstore,  char *searched_for_ware) {
-  elem_t key = {.p = strdup(name)};
+  elem_t key = {.p = name};
   if  (!ioopm_hash_table_lookup(webstore->hash, key)) {
-	printf("\nThis %s doesn't exists! \n", searched_for_ware);
-    free(key.p);
+	  printf("\nThis %s doesn't exists! \n", searched_for_ware);
     return true;
   }
 
   return false; 
 }
 
+elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t elem) {
+  return ioopm_hash_table_lookup(webstore->hash, elem);
+}
 
 
+
+
+// Check total amount of a merch in stock
+int webstore_amount_in_stock(webstore_t *webstore, char *name) {
+  int result = 0;
+  elem_t elem;
+  elem.p = name;
+  elem_t *elem2 = ioopm_hash_table_lookup(webstore->hash, elem);
+
+  if (!elem2);
+  else {
+    webstore_stock_t *stock = (*((webstore_merch_t**)(elem2->p)))->stock;
+
+	  while (stock){
+      result += stock->amount;
+      stock = stock->next;
+	  }
+
+  }
+
+  return result;
+}
 
