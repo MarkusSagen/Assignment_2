@@ -93,6 +93,9 @@ char* ask_question(char *question, char *error_msg, check_func check) {
 bool yes_no() {
   char *str_in = read_string();
   float score = str_cmp(str_in, "y");
+
+  // MAYBE MEMLEAK
+  free(str_in);
   if (score>=3 || str_in[0]=='\0') return true; 
   else return false;
 }
