@@ -1,5 +1,10 @@
 #pragma once
 #include <stdbool.h>
+#include <math.h>
+#include <stdbool.h>
+#include <string.h>
+
+
 
 
 
@@ -7,6 +12,7 @@ union elem
 {
   int i;
   unsigned int u;
+  unsigned long l;
   bool b;
   float f;
   void *p;

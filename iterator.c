@@ -1,5 +1,6 @@
 #include "iterator.h"
 #include "linked_list.h"
+#include "common.h"
 #include <stdlib.h>
 
 /* Declaration of structs */

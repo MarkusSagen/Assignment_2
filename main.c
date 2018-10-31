@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include "business_logic.h"
+#include "common.h"
 #include "utils.h"
 #define webstore_list_len (int)(sizeof(list)/sizeof(list[0])) -1
 

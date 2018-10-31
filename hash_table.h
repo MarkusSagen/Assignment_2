@@ -1,6 +1,7 @@
 #pragma once
 #include "linked_list.h"
-
+#include "common.h"
+#include <math.h>
 
 /* Struct declaration for hash table and hash table entries */
 typedef struct entry entry_t;

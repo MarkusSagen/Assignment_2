@@ -61,7 +61,7 @@ void webstore_add_merch_test(void)
 
     // Check item in store
     webstore_add_merch(webstore, "", desc, price);
-    CU_ASSERT_TRUE(webstore_is_item_AUX(webstore, ""));
+    CU_ASSERT_FALSE(webstore_is_item_AUX(webstore, ""));
 
     // Check item in store
     webstore_add_merch(webstore, "sg2666asd!", desc, price);
@@ -77,6 +77,11 @@ void webstore_add_merch_test(void)
 
     webstore_remove(webstore);
 }
+
+
+
+
+
 
 
 
@@ -132,6 +137,9 @@ void webstore_remove_merch_test(void)
 
 
 
+
+
+
 void webstore_edit_merch_test(void)
 {
    webstore_t *webstore = webstore_init();
@@ -181,7 +189,6 @@ void webstore_replenish_test(void)
 
     int no_item = 0;
     int amount = 10;
-    int amount2 = 5;
     int price = 10;
 
 
@@ -218,10 +225,12 @@ void webstore_replenish_test(void)
     webstore_replenish(webstore, merch2, "G83", 0);           // added 10  
     CU_ASSERT_EQUAL(webstore_amount_in_stock(webstore, merch2), 100);  // Check if has 100 in total
 
-    
 
      webstore_remove(webstore);
 }
+
+
+
 
 
 
@@ -248,14 +257,15 @@ void webstore_create_cart_test(void)
 
 
 
-//TODO 
+
+
+
+
 void webstore_add_to_cart_test(void)
 {
     webstore_t *webstore = webstore_init();
     
     char *name = "cola";
-    char *item_fail0 = "Ogiltigt";
-    char *item_fail2 = "godis1234";
     char *desc = "en cola burk";
     int price = 1;
     char *location = "A20";
@@ -265,7 +275,14 @@ void webstore_add_to_cart_test(void)
 
 
     
-    // Add items
+    // Test add items non existing
+    int cart_nr1 = webstore_create_cart(webstore);
+    int test1_fail0 = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
+    CU_ASSERT_EQUAL(test1_fail0, 0);
+    
+	// Test adding merch not in stock yet
+	 int test1_fail2 = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
+    CU_ASSERT_EQUAL(test1_fail0, 0);
 
     webstore_add_merch(webstore, name, desc, price);
 
@@ -274,17 +291,17 @@ void webstore_add_to_cart_test(void)
     webstore_replenish(webstore, name, location, in_amount);
     
   
-    int cart_nr1 = webstore_create_cart(webstore);
+
     int success = webstore_add_to_cart(webstore, name, take_amount, cart_nr1);
     CU_ASSERT_EQUAL(success, 1);
+
     
-    int fail0 = webstore_add_to_cart(webstore, item_fail0, take_amount, cart_nr1);
-    CU_ASSERT_EQUAL(fail0, 0);
+// Test adding item t in stock 
+    int fail2 = webstore_add_to_cart(webstore, item_fail2, take_amount, cart_nr1);
+    CU_ASSERT_EQUAL(fail2, 2);
     
-    //int fail2 = webstore_add_to_cart(webstore, item_fail2, take_amount, cart_nr1);
-    //CU_ASSERT_EQUAL(fail2, 2);
-    
-    
+
+	// Test add to not found cart    
     int fail3 = webstore_add_to_cart(webstore, name, take_amount, cart_select_fail3);
     CU_ASSERT_EQUAL(fail3, 3);
 
@@ -306,10 +323,6 @@ void webstore_remove_cart_test(void)
  
     char *desc = "En rolig beskrivning";
     char *location = "H20";
-
-    int no_item = 0;
-    int amount = 10;
-    int amount2 = 5;
     int price = 10;
 
 

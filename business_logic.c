@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "utils.h"
+#include "common.h"
 #include "business_logic.h"
 
 /* Declaration of global variables */
@@ -178,7 +179,7 @@ void webstore_edit_merch(webstore_t *webstore, char *merch_to_edit, char *name, 
     elem_t value = {.p = merch};
     ioopm_hash_table_remove(webstore->hash, key);
     key.p = strdup(name);
-    ioopm_hash_table_insert(&webstore->hash, key, value);
+    ioopm_hash_table_insert( (&webstore->hash), key, value);
     free((*merch)->name);
     free((*merch)->description);
     (*merch)->name = strdup(name);
@@ -500,9 +501,9 @@ void webstore_undo(webstore_t *webstore) {
 
 
 // Calculate hash as the sum of all strings in ascii
-static long double string_sum_hash(const elem_t ware) {
+static unsigned long string_sum_hash(const elem_t ware) {
     char *str = ware.s;
-    long double result = 0;
+    unsigned long result = 0;
     do
     {
         result += *str;

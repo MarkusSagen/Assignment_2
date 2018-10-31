@@ -37,7 +37,7 @@ struct hash_table
 
 // Find the previous entry for a given key - returns Null if not found
 entry_t *find_previous_entry_for_key(ioopm_hash_table_t *ht, elem_t key) {
-  long double hash;                      // Max size of 1.19 x 10^4932
+  unsigned long hash;                      // Max size of 1.19 x 10^4932
 
   if (ht->hashfun == NULL) hash = key.i; 
   else  hash = ht->hashfun(key);
@@ -46,7 +46,7 @@ entry_t *find_previous_entry_for_key(ioopm_hash_table_t *ht, elem_t key) {
   
   if (hash>0) {
     /// Calculate the bucket for this entry
-    int bucket = round(fmod(hash, ht->size));
+    int bucket = hash % ht->size;
     entry_t *tmp = &ht->buckets[bucket];
     entry_t *tmp_prev = tmp;
     while (true) {

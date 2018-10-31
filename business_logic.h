@@ -1,5 +1,6 @@
 #pragma once
 #include "hash_table.h"
+#include "common.h"
 typedef struct stock webstore_stock_t;
 typedef struct merch webstore_merch_t;
 typedef struct webstore webstore_t;
