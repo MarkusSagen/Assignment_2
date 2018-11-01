@@ -7,7 +7,7 @@ Detta program bygger en virituel butik där användaren kan sätta in egna varor
 Programmet öppnas enklast med något av kommandona nedan i terminalen med den medföljande makefilen. <br/>
 <br/>
 <br/>
-Den virituella butiken har 14 val att välja på, som visas på terminalens fönster när programmet körs.  <br/>
+Den virituella butiken har `14` val att välja på, som visas på terminalens fönster när programmet körs.  <br/>
 <br/>
 Skriv in någon av de 14 valen nummer 1-14.    <br/>
 För att bekräfta ett val, tryck på enterknappen efter du skrivit in vad vill göra för val.    <br/>
