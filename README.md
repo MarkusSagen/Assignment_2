@@ -35,12 +35,11 @@ Dock bör programmet skydda mot felaktig användning (Exempelvis: försöka ta b
 <br/>
 
 Fulla namn   |  Förlaring
------------- | --------------|----------------------------------
-| `make webstore` |   För att bygga och **_köra_ _programmet_**  |
-| `make memwebstore` |   För att bygga och **_köra_ _programmet_ i_**  `valgrind` |
-| `make test` | För att bygga och **köra testerna _vanligt_**  |
-| `make memtest` | För att bygga och **_köra_ _tester_ i  `valgrind`**  |
-
+------------ | -------------------------------------
+| `make webstore`     |   För att bygga och **_köra_ _programmet_**                |
+| `make memwebstore`  |   För att bygga och **_köra_ _programmet_ i_**  `valgrind` |
+| `make test`         | För att bygga och **köra testerna _vanligt_**              |
+| `make memtest`      | För att bygga och **_köra_ _tester_ i  `valgrind`**        |
 _________________________________________________________________________
 
   <br/>
