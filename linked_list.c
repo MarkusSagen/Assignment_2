@@ -4,6 +4,9 @@
 
 
 
+/* Declaration of a list */
+
+// structure of a list in a linked list
 struct list
 {
   elem_t value;

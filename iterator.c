@@ -5,6 +5,7 @@
 
 /* Declaration of structs */
 
+// A structure of a linked list
 struct list
 {
   elem_t value;
@@ -13,12 +14,16 @@ struct list
   ioopm_list_t *last;  
 };
 
+
+
+
+
+// A structure for itorator over the linked list
 struct ioopm_list_iterator
 {
   ioopm_list_t *current;
   ioopm_list_t *dummy;
 };
-
 
 
 

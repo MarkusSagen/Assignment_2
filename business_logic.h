@@ -1,11 +1,15 @@
 #pragma once
 #include "hash_table.h"
 #include "common.h"
-typedef struct stock webstore_stock_t;
-typedef struct merch webstore_merch_t;
-typedef struct webstore webstore_t;
-typedef struct cart_item webstore_cart_item_t;
-typedef struct cart webstore_cart_t;
+
+/* Declaration of typedefs */
+
+
+typedef struct stock webstore_stock_t;              // Define type for merch in stock
+typedef struct merch webstore_merch_t;              // Define type for merch in stock
+typedef struct webstore webstore_t;                 // Define type for merch in stock
+typedef struct cart_item webstore_cart_item_t;      // Define type for merch in stock
+typedef struct cart webstore_cart_t;                // Define type for merch in stock
 
 
 
@@ -150,24 +154,23 @@ bool webstore_is_no_item(char *name, webstore_t *webstore,  char *searched_for_w
 void webstore_menu(webstore_t *webstore);
 
 
-
-
-////////TODO!!!!!!
-
-
-
-/// @brief Creates the UI for the webstore menu
+/// @brief Helperfunction to include in the test in order to access looking up merchendise
 /// @param Webstore, the webstore the users can interact with
-elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t elem);
+/// @param merch, the merchendise we want to find if it is stored in the webstore
+elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t merch);
 
 
-/// @brief Creates the UI for the webstore menu
+/// @brief List total amount in stock of an item regardles of diffrent locations
+/// @param Webstore, the webstore the users can interact with¨
+/// @param merch_name, name of the merchendise to find in the store
+/// @return Total amount of a given merchendise in stock, regardless of multiple location
+int webstore_amount_in_stock(webstore_t *webstore, char *merch_name);
+
+
+/// @brief Checks if a cart with unique ID exists or not
 /// @param Webstore, the webstore the users can interact with
-int webstore_amount_in_stock(webstore_t *webstore, char *name);
-
-
-/// @brief Creates the UI for the webstore menu
-/// @param Webstore, the webstore the users can interact with
+/// @param index, the ID number for a cart
+/// @return True if a cart with that ID exists, otherwise false
 bool webstore_is_not_cart(webstore_t *webstore, int index);
 
 

@@ -387,8 +387,8 @@ void webstore_menu(webstore_t *webstore){
       webstore_menu(webstore);
       break;
     case 13 :
-      webstore_undo(webstore);    // TODO - To be implimented later
-      webstore_menu(webstore);
+      webstore_undo(webstore);  // Not implemented yet
+      webstore_menu(webstore);  // Not implemented yet
       break;
     case 14 :
       break;

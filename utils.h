@@ -8,14 +8,16 @@
 
 /* Declarations of typedef */
 
+// Declare structure of a union
 typedef union {
   int   int_value;
   float float_value;
   char *string_value;
 } answer_t;
 
-typedef bool(*check_func)(char[]);
-typedef answer_t(*convert_func)(char[]);
+
+typedef bool(*check_func)(char[]);          // type declaration of a function to check a string
+typedef answer_t(*convert_func)(char[]);    // type declaration to check a answer to a question
 
 
 
@@ -72,4 +74,14 @@ float str_cmp(char *str_in, char *str_ref);
 /// @return Always returns true
 bool check_true();
 
+
+/// @brief Finds if a number is positive
+/// @param number, the number to check
+/// @return True if positive, otwervise false
 bool is_positive(char *number);
+
+
+
+
+
+

@@ -13,6 +13,8 @@
 
 
 /* Declaration of structs */
+
+// Merchendise in webstore
 struct merch
 {
   char *name;
@@ -23,24 +25,28 @@ struct merch
   int available;
 };
 
+// Merchendise in stock
 struct stock {
   char *location;
   int amount;
   webstore_stock_t *next;
 };
 
+// The structures in a webstore
 struct webstore {
   webstore_merch_t *merch;
   ioopm_hash_table_t *hash;
   webstore_cart_t *cart;
 };
 
+// Structure of things in a cart
 struct cart_item {
   webstore_merch_t *merch;
   int amount;
   webstore_cart_item_t *next;
 };
 
+// Structure of the cart itself
 struct cart {
   webstore_cart_item_t *items;
   int index;
@@ -51,30 +57,6 @@ struct cart {
 
 
 
-// Lists all places a given merch is loacted and how much
-void show_stock_aux(webstore_t *webstore) {
-  // Check if the asked for item is in stock, based on name
-  char *name = ask_question("Name: ", "Name: ", check_true);
-  elem_t key = {.p = name};
-  elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
-  
-  if (!elem) puts("\nThis merch does not exist!");
-  else {
-    webstore_stock_t *stock = (*((webstore_merch_t**)(elem->p)))->stock;
-    
-    // Print text to help the user understand 
-    if (!stock) puts("Amount: 0");
-
-	  puts("");
-	  while (stock){
-      printf("%s: %d\n", stock->location, stock->amount);
-      stock = stock->next;
-	  }
-    
-  }
-  
-  free(name);
-}
 
 
 
@@ -112,10 +94,20 @@ static void remove_item_from_carts(webstore_t *webstore, webstore_merch_t *merch
 
 
 
+
+
+
+/* FUNCTION DECLATATION */
+
+
+
+
+
+
+
 // Adds merch to webstore based on unique name
 void webstore_add_merch(webstore_t *webstore, char *name, char *desc, int price) {
   elem_t key = {.p = strdup(name)};
-
 
   // Checks if already merch with that name 
   if (ioopm_hash_table_lookup(webstore->hash, key));
@@ -139,14 +131,42 @@ void webstore_add_merch(webstore_t *webstore, char *name, char *desc, int price)
 
 
 
-// Removes merch based on name
-void webstore_remove_merch(webstore_t *webstore, char *remove) {
-  elem_t key = {.p = remove};
-  elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
 
-  if (!elem);
+// Lists all places a given merch is loacted and how much
+void show_stock_aux(webstore_t *webstore) {
+  // Check if the asked for item is in stock, based on name
+  char *name = ask_question("Name: ", "Name: ", check_true);
+  elem_t key = {.p = name};
+  elem_t *item_in_stock = ioopm_hash_table_lookup(webstore->hash, key);
+  
+  if (!item_in_stock) puts("\nThis merch does not exist!");
   else {
-    webstore_merch_t **merch = (webstore_merch_t**)elem->p;
+    webstore_stock_t *stock = (*((webstore_merch_t**)(item_in_stock->p)))->stock;
+    
+    // Print text to help the user understand 
+    if (!stock) puts("Amount: 0");
+
+	  puts("");
+	  while (stock){
+      printf("%s: %d\n", stock->location, stock->amount);
+      stock = stock->next;
+	  }
+    
+  }
+  
+  free(name);
+}
+
+
+
+// Removes merch based on name
+void webstore_remove_merch(webstore_t *webstore, char *merch_name) {
+  elem_t key = {.p = merch_name};
+  elem_t *item_in_stock = ioopm_hash_table_lookup(webstore->hash, key);
+
+  if (!item_in_stock);
+  else {
+    webstore_merch_t **merch = (webstore_merch_t**)item_in_stock->p;
     webstore_merch_t *merch_to_remove = *merch;
     remove_item_from_carts(webstore, *merch);
     webstore_stock_t **stock = &(*merch)->stock;
@@ -168,19 +188,19 @@ void webstore_remove_merch(webstore_t *webstore, char *remove) {
 
 
 // Edits an existing merchendise based on name
-void webstore_edit_merch(webstore_t *webstore, char *merch_to_edit, char *name, char *desc, int price) {
+void webstore_edit_merch(webstore_t *webstore, char *merch_to_edit, char *new_name, char *desc, int price) {
   elem_t key = {.p = merch_to_edit};
-  elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
-  if (!elem);
+  elem_t *item_in_stock = ioopm_hash_table_lookup(webstore->hash, key);
+  if (!item_in_stock);
   else {
-    webstore_merch_t **merch = (webstore_merch_t**)elem->p;
+    webstore_merch_t **merch = (webstore_merch_t**)item_in_stock->p;
     elem_t value = {.p = merch};
     ioopm_hash_table_remove(webstore->hash, key);
-    key.p = strdup(name);
+    key.p = strdup(new_name);
     ioopm_hash_table_insert( (&webstore->hash), key, value);
     free((*merch)->name);
     free((*merch)->description);
-    (*merch)->name = strdup(name);
+    (*merch)->name = strdup(new_name);
     (*merch)->description = strdup(desc);
     (*merch)->price = price;
   }
@@ -192,11 +212,11 @@ void webstore_edit_merch(webstore_t *webstore, char *merch_to_edit, char *name, 
 // Replenishes merchendise based on name and loaction
 void webstore_replenish(webstore_t *webstore, char *merch_to_rep, char *location, int amount) {
   elem_t key = {.p = merch_to_rep};
-  elem_t *elem = ioopm_hash_table_lookup(webstore->hash, key);
+  elem_t *item_in_stock = ioopm_hash_table_lookup(webstore->hash, key);
 
-  if (!elem || amount<1);
+  if (!item_in_stock || amount<1);
   else {
-    webstore_merch_t **merch = (webstore_merch_t**)elem->p;
+    webstore_merch_t **merch = (webstore_merch_t**)item_in_stock->p;
     (*merch)->available += amount;
     webstore_stock_t **stock = &(*merch)->stock;
 
@@ -251,6 +271,8 @@ int webstore_create_cart(webstore_t *webstore) {
 
   return index;
 }
+
+
 
 
 // Checks if a given index of a cart is stored in the webstore
@@ -514,14 +536,18 @@ webstore_t *webstore_init() {
 
 
 
+
+
 // Removes an entire webstore and all merch 
 void webstore_remove(webstore_t *webstore) {
 ioopm_hash_table_destroy(webstore->hash);
   webstore_merch_t **merch = &webstore->merch;
   webstore_merch_t *merch_to_remove;
 
+  // Find and remove all merchendise in webstore
   while(*merch) {
     webstore_stock_t **stock = &(*merch)->stock;
+
     while (*stock) {
         webstore_stock_t *stock_rm = *stock;
         stock = &(*stock)->next;
@@ -534,6 +560,7 @@ ioopm_hash_table_destroy(webstore->hash);
     merch = &(*merch)->next;
   }
 
+  // Find and remove all carts
   webstore_cart_t **cart = &webstore->cart;
 
   while (*cart) {
@@ -550,6 +577,7 @@ ioopm_hash_table_destroy(webstore->hash);
     free(cart_rm);
   }
 
+  // Remove the webstore
   free(webstore);
 }
 
@@ -574,7 +602,7 @@ bool webstore_is_already_item(char *name, webstore_t *webstore, char *searched_f
 // Helper funtion - Prints out if there is no item with that name
 bool webstore_is_no_item(char *name, webstore_t *webstore,  char *searched_for_ware) {
   elem_t key = {.p = name};
-  if  (!ioopm_hash_table_lookup(webstore->hash, key)) {
+  if (!ioopm_hash_table_lookup(webstore->hash, key)) {
 	  printf("\nThis %s doesn't exists! \n", searched_for_ware);
     return true;
   }
@@ -585,7 +613,7 @@ bool webstore_is_no_item(char *name, webstore_t *webstore,  char *searched_for_w
 
 
 
-
+// Helper function to the function "Hash table lookup"
 elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t elem) {
   return ioopm_hash_table_lookup(webstore->hash, elem);
 }
@@ -595,15 +623,15 @@ elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t elem) {
 
 
 // Check total amount of a merch in stock
-int webstore_amount_in_stock(webstore_t *webstore, char *name) {
+int webstore_amount_in_stock(webstore_t *webstore, char *merch_name) {
   int result = 0;
   elem_t elem;
-  elem.p = name;
-  elem_t *elem2 = ioopm_hash_table_lookup(webstore->hash, elem);
+  elem.p = merch_name;
+  elem_t *item_in_stock = ioopm_hash_table_lookup(webstore->hash, elem);
 
-  if (!elem2);
+  if (!item_in_stock);
   else {
-    webstore_stock_t *stock = (*((webstore_merch_t**)(elem2->p)))->stock;
+    webstore_stock_t *stock = (*((webstore_merch_t**)(item_in_stock->p)))->stock;
 
 	  while (stock){
       result += stock->amount;

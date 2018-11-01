@@ -4,8 +4,9 @@
 
 /* Decalration of typedef */
 
-typedef struct list ioopm_list_t;
-typedef unsigned long (*ioopm_hash_function)(elem_t key);
+
+typedef struct list ioopm_list_t;                           // type declaration of a linked list
+typedef unsigned long (*ioopm_hash_function)(elem_t key);   // type declaration of a comparison function in a linked list
 
 
 
