@@ -4,15 +4,19 @@
 
 
 
-/* Declaration of a list */
+/** Declaration of a list */
 
 // structure of a list in a linked list
-struct list
-{
+struct list {
+   /// A linked list has values, could be words, numbers exc.
   elem_t value;
+   /// The size of the entire linked list
   int size;
+   /// Pointer to the next list in the linked list
   ioopm_list_t *next;
+   /// Pointer to the last link in the linke dlist
   ioopm_list_t *last;
+   /// A function to apply for adding links to the linked list
   ioopm_eq_function fun;
 };
 
@@ -20,12 +24,12 @@ struct list
 
 
 
+/** FUNCTION DECLARATION */
 
 
 
-// Creates a new empty list
-ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun)
-{
+/// Creates a new empty list
+ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun) {
   ioopm_list_t *list = calloc(1, sizeof(ioopm_list_t));
   list->fun = fun;
   return list;
@@ -34,7 +38,7 @@ ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun)
 
 
 
-// Tear down the linked list and return all its memory 
+/// Tear down the linked list and return all its memory 
 void ioopm_linked_list_destroy(ioopm_list_t *list) {
   ioopm_list_t *tmp = list->next;
   free(list);
@@ -44,9 +48,8 @@ void ioopm_linked_list_destroy(ioopm_list_t *list) {
 
 
 
-// Insert at the end of a linked list 
-void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
-{
+/// Insert at the end of a linked list 
+void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value) {
   ioopm_list_t *tmp = ioopm_linked_list_create(NULL);
   tmp->value = value;
   tmp->next = list->next; 
@@ -57,7 +60,7 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
 
 
 
-// Insert at the start of a linked list
+/// Insert at the start of a linked list
 void ioopm_linked_list_append(ioopm_list_t *list, elem_t value) {
   ioopm_list_t *tmp = ioopm_linked_list_create(NULL);
   tmp->value = value;
@@ -75,9 +78,8 @@ void ioopm_linked_list_append(ioopm_list_t *list, elem_t value) {
 
 
 
-// Insert an element into a linked list at valid index [0, n] for a list of n elements
-void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value)
-{
+/// Insert an element into a linked list at valid index [0, n] for a list of n elements
+void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value) {
   ioopm_list_t *insert = ioopm_linked_list_create(NULL);
   insert->value = value;
   ioopm_list_t *prev = list;
@@ -100,9 +102,8 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value)
 
 
 
-//  Retrieve an element from a linked list
-elem_t *ioopm_linked_list_get(ioopm_list_t *list, int index)
-{
+///  Retrieve an element from a linked list
+elem_t *ioopm_linked_list_get(ioopm_list_t *list, int index) {
   ioopm_list_t *tmp = list->next;
   for (int i = 0; i < index; ++i)
     {
@@ -113,7 +114,7 @@ elem_t *ioopm_linked_list_get(ioopm_list_t *list, int index)
 }
 
 
-// Remove an element from a linked list
+/// Remove an element from a linked list
 elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index) {
   ioopm_list_t **previous = &list;
   while (index > 0) {
@@ -132,9 +133,8 @@ elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index) {
 
 
 
-// Test if an element is in the list
-bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
-{
+/// Test if an element is in the list
+bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element) {
   ioopm_list_t **test = &list;
   while ((*test)->next != NULL) {
     if (list->fun((*test)->next->value, element)) return true;
@@ -146,16 +146,15 @@ bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
 
 
 
-// Looksup the number of elements in the linked list 
-int ioopm_linked_list_size(ioopm_list_t *list)
-{
+/// Looksup the number of elements in the linked list 
+int ioopm_linked_list_size(ioopm_list_t *list) {
   return list->size;  
 }
 
 
 
 
-// Tests whether a list is empty or not
+/// Tests whether a list is empty or not
 bool ioopm_linked_list_is_empty(ioopm_list_t *list) {
   if (list->next == NULL) return true;
   else return false;
@@ -164,7 +163,7 @@ bool ioopm_linked_list_is_empty(ioopm_list_t *list) {
 
 
 
-// Removes all elements from a linked list
+/// Removes all elements from a linked list
 void ioopm_linked_list_clear(ioopm_list_t *list) {
   ioopm_list_t *tmp = list->next;
   ioopm_list_t *tmp_rm;
@@ -181,9 +180,8 @@ void ioopm_linked_list_clear(ioopm_list_t *list) {
 
 
 
-// Tests if a supplied property holds for all elements in a list
-bool ioopm_linked_list_all(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), void *x)
-{
+/// Tests if a supplied property holds for all elements in a list
+bool ioopm_linked_list_all(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), void *x) {
   ioopm_list_t **test = &(list->next);
   while (*test != NULL) {
     if (!prop((*test)->value, *(elem_t *)x)) return false;
@@ -195,9 +193,8 @@ bool ioopm_linked_list_all(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), voi
 
 
 
-// Tests if a supplied property holds for any element in a list
-bool ioopm_linked_list_any(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), void *x)
-{
+/// Tests if a supplied property holds for any element in a list
+bool ioopm_linked_list_any(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), void *x) {
   ioopm_list_t **ptr_to_list = &(list->next);
   while (*ptr_to_list != NULL) {
     if (prop((*ptr_to_list)->value, *(elem_t *)x)) return true;
@@ -209,9 +206,8 @@ bool ioopm_linked_list_any(ioopm_list_t *list, bool (*prop)(elem_t, elem_t), voi
 
 
 
-// Applies a supplied function to all elements in a list
-void ioopm_linked_apply_to_all(ioopm_list_t *list, void (*fun)(elem_t *, elem_t *), void *x)
-{
+/// Applies a supplied function to all elements in a list
+void ioopm_linked_apply_to_all(ioopm_list_t *list, void (*fun)(elem_t *, elem_t *), void *x) {
   ioopm_list_t **ptr_to_list = &(list->next);
   while (*ptr_to_list != NULL) {
     fun(&(*ptr_to_list)->value, (elem_t *)x);

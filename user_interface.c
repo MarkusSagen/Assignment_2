@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include "business_logic.h"
 #include "utils.h"
-#define webstore_list_len (int)(sizeof(list)/sizeof(list[0])) -1
 
 
+/**  Function declaration */
 
-/*  Function declaration */
 
-
-// Prints the UI of the webstore and checks if user chose a valid input
+/// Prints the UI of the webstore and checks if user chose a valid input
 int webstore_menu_ui() {
 
   // All choises in menu to chose from
@@ -42,7 +40,7 @@ int webstore_menu_ui() {
   // Converts the string to a number
   char *choise_made = read_string();
   int choise_made_nr = atoi(choise_made);
-
+  int webstore_list_len = (int)(sizeof(list)/sizeof(list[0])) -1;
   // If the chosen menu choise is valid, show that option
   if (choise_made_nr > 0 && choise_made_nr <= webstore_list_len) {
 	  printf("%s\n", list[choise_made_nr - 1]);
@@ -90,7 +88,7 @@ int webstore_menu_ui() {
 
 
 
-// Show all places a given merch is loacted and how much
+/// Show all places a given merch is loacted and how much
 static void show_stock(webstore_t *webstore) {
   show_stock_aux(webstore);
 }
@@ -98,7 +96,7 @@ static void show_stock(webstore_t *webstore) {
 
 
 
-// Remove merchandise based on name 
+/// Remove merchandise based on name 
 static void remove_merch(webstore_t *webstore) {
   char *merch_to_remove = ask_question("Which merchendise: ", "\nMust enter at least one word!\nWhich merchendise: ", not_empty);	
 
@@ -112,7 +110,7 @@ static void remove_merch(webstore_t *webstore) {
 
 
 
-// Edit merchandise based on name 
+/// Edit merchandise based on name 
 static void edit_merch(webstore_t *webstore) {
   char *merch_to_edit = ask_question("Which merchendise: ", "\nMust enter at least one word!\nWhich merchendise: ", not_empty); 
  
@@ -136,7 +134,7 @@ static void edit_merch(webstore_t *webstore) {
        
 
 
-// Replenish merchandise based on name and location
+/// Replenish merchandise based on name and location
 static void replenish(webstore_t *webstore) {
   char *item_to_replenish = ask_question("Which merchendise:  ", "\nMust enter at least one word!\nWhich merchendise: ", not_empty);
   
@@ -158,7 +156,7 @@ static void replenish(webstore_t *webstore) {
 
 
 
-// Add merchendise name, description and price
+/// Add merchendise name, description and price
 static void add_merch(webstore_t *webstore) { 
   char *merch_name = ask_question("Name of Merchendise: ", "\nMust enter at least one word!\nName of Merchendise:  ", not_empty);
   
@@ -179,7 +177,7 @@ static void add_merch(webstore_t *webstore) {
 
 
 
-// List all merchandise name, description and price
+/// List all merchandise name, description and price
 static void list_merch(webstore_merch_t **merch){
   list_merch_aux(merch);
 }
@@ -188,7 +186,7 @@ static void list_merch(webstore_merch_t **merch){
 
 
 
-// Prints a message when creating a cart
+/// Prints a message when creating a cart
 static void create_cart(webstore_t *webstore) {
   printf("Cart created with index %d\n", webstore_create_cart(webstore));
 }
@@ -196,7 +194,7 @@ static void create_cart(webstore_t *webstore) {
 
 
 
-// Removes a given cart based on cart index number
+/// Removes a given cart based on cart index number
 static void remove_cart(webstore_t *webstore) {
   char *cart_str = ask_question("Cart index: ", "\nCart index must be a number greater than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
@@ -208,7 +206,7 @@ static void remove_cart(webstore_t *webstore) {
 
 
 
-// Adds a given item to a given cart
+/// Adds a given item to a given cart
 static void add_to_cart(webstore_t *webstore) {
   char *cart_str = ask_question("Cart index: ", "\nCart index must be a number greater than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
@@ -252,7 +250,7 @@ static void add_to_cart(webstore_t *webstore) {
 
 
 
-// Removes a given item form a given cart
+/// Removes a given item form a given cart
 static void remove_from_cart(webstore_t *webstore) {
   char *cart_str = ask_question("Cart index: ", "\nCart index must be a number greater than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
@@ -299,7 +297,7 @@ static void remove_from_cart(webstore_t *webstore) {
 
 
 
-// Calculates the cost of all items in a given cart
+/// Calculates the cost of all items in a given cart
 static void calculate_cost(webstore_t *webstore) {
   char *cart_str = ask_question("Cart index: ", "\nCart index must be a number greater than 0!\nCart: ", is_positive);
   int cart_index = atoi(cart_str);
@@ -321,7 +319,7 @@ static void calculate_cost(webstore_t *webstore) {
 
 
 
-// Checkout all items in a cart
+/// Checkout all items in a cart
 static void checkout(webstore_t *webstore) {
   char *cart_str = ask_question("Cart index: ", "\nCart index must be a number greater than 0!\nCart: ", is_positive);
   int cart = atoi(cart_str);
@@ -334,7 +332,7 @@ static void checkout(webstore_t *webstore) {
 
 
 
-// Does the given action based on the choise from menu
+/// Does the given action based on the choise from menu
 void webstore_menu(webstore_t *webstore){
   int menu = webstore_menu_ui();
   switch(menu) {

@@ -6,22 +6,27 @@
 #include "common.h"
 
 
-/* Declarations of typedef */
+/** Declarations of typedef */
 
-// Declare structure of a union
+/// Declaration of a answer. Has only one type: whole number, decimal number or a word
 typedef union {
-  int   int_value;
-  float float_value;
-  char *string_value;
-} answer_t;
+  /// Answer can be an integer
+  int int_value;    
+  /// Answer can be a decimal number  
+  float float_value;    
+  /// Answer can be a word
+  char *string_value;   
+} answer_t;             
 
 
-typedef bool(*check_func)(char[]);          // type declaration of a function to check a string
-typedef answer_t(*convert_func)(char[]);    // type declaration to check a answer to a question
 
 
 
 
+/// The Type declaration of a function to check a string
+typedef bool(*check_func)(char[]);          
+/// The Type declaration to check a answer to a question
+typedef answer_t(*convert_func)(char[]);    
 
 
 /// @brief Checks if string is a valid shelf number

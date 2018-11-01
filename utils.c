@@ -9,17 +9,18 @@
 
 
 
-// Checks if a string is an empty string
+/// Checks if a string is an empty string
 bool not_empty(char *str) {
   return str[0] != '\0';
 }
 
+/// Checks if a number is poistive
 bool is_positive(char *number) {
   return atoi(number)>0;
 }
 
 
-// Checks if asked for shelf has valid shelf name
+/// Checks if asked for shelf has valid shelf name
 bool is_shelf(char *str) {
   return str[0] >= 'A' && str[0] <= 'Z' && str[1] >= '0' && str[1] <= '9'  && str[2] >= '0' && str[2] <= '9' && str[3] == '\0'; 
 }
@@ -27,7 +28,7 @@ bool is_shelf(char *str) {
 
 
 
-// Checks if number is a valid integer
+/// Checks if number is a valid integer
 bool is_number(char *str) {
   bool k = false;
 
@@ -45,7 +46,7 @@ bool is_number(char *str) {
 
 
 
-// Reads an inputed sentance
+/// Reads an inputed sentance
 char *read_string() {
   int buf_siz = 50;
   char buf[buf_siz];
@@ -65,7 +66,7 @@ char *read_string() {
 
 
 
-// Asks a question that will repete until requirement is met
+/// Asks a question that will repete until requirement is met
 char* ask_question(char *question, char *error_msg, check_func check) {
   printf("%s", question);
   int buf_siz = 50;
@@ -89,7 +90,7 @@ char* ask_question(char *question, char *error_msg, check_func check) {
 
 
 
-// Checks if answer to a given question is yes
+/// Checks if answer to a given question is yes
 bool yes_no() {
   bool answer;
   char *str_in = read_string();
@@ -99,7 +100,6 @@ bool yes_no() {
   if (score>=3 || str_in[0]=='\0') answer = true; 
   else answer = false;
    
-  // MAYBE MEMLEAK
   free(str_in);
   return answer;
 }
@@ -107,7 +107,7 @@ bool yes_no() {
 
 
 
-// Returns always true
+/// Returns always true
 bool check_true() {
   return true;
 }
@@ -115,16 +115,15 @@ bool check_true() {
 
 
 
-// Converts a string inputed as float to actual type float
-answer_t make_float(char *str)
-{
+/// Converts a string inputed as float to actual type float
+answer_t make_float(char *str) {
   return (answer_t) { .float_value = atof(str) };
 }
 
 
 
 
-// Checks if two given characters are the same
+/// Checks if two given characters are the same
 static float char_match (char in, char cmp) {
   if (in == cmp) return 1;
   if  ((cmp >= 'a' && cmp <= 'z' && in == cmp - 'a' + 'A') || (cmp >= 'A' && cmp <= 'Z' && in == cmp + 'a' - 'A')) return 1;
@@ -134,7 +133,7 @@ static float char_match (char in, char cmp) {
 
 
 
-// Compares if two strings are the same as each other
+/// Compares if two strings are the same as each other
 float str_cmp(char *in, char *cmp) {
   float result = 0;
   int in_p = 0;

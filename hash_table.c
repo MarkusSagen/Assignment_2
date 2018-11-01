@@ -10,34 +10,45 @@
 
 
 
-/* Declaration of structs */
+/** Declaration of structs */
 
-// Entries in the hash table
-struct entry
-{
+/// Entries in the hash table
+struct entry {
+   /// The unique hash number for the entry
   int hash;
+   /// The key for the entry
   elem_t key;       
+   /// The value for the entry
   elem_t value;    
+   /// Pointer to the next entry in the hash table 
   entry_t *next;    
 };
 
-// The structure of the hash table
-struct hash_table
-{
+
+/// The structure of the hash table
+struct hash_table {
+   /// The size of an entire hash table
   int size;
+   /// A number to calculate the size of the hash table
   int calc_size;
+   /// A hashing function to apply to all entries when adding entries to hash table
   ioopm_hash_function hashfun;
+   /// Comparison function to apply to entries
   ioopm_eq_function eqfunc;
+   /// A list of buckets in the hash table
   entry_t buckets[];
 };
 
 
 
 
-/* Declaration of functions */
 
 
-// Find the previous entry for a given key - returns Null if that entry was not found
+
+/** FUNCTION DECLARATION */
+
+
+/// Find the previous entry for a given key - returns Null if that entry was not found
 entry_t *find_previous_entry_for_key(ioopm_hash_table_t *ht, elem_t key) {
   unsigned long hash;                      
 
@@ -45,7 +56,7 @@ entry_t *find_previous_entry_for_key(ioopm_hash_table_t *ht, elem_t key) {
   else  hash = ht->hashfun(key);
   
   if (hash>0) {
-    /// Calculate the bucket for this entry
+    /// Calculate a bucket for the entry
     int bucket = hash % ht->size;
     entry_t *tmp = &ht->buckets[bucket];
     entry_t *tmp_prev = tmp;
@@ -66,7 +77,7 @@ entry_t *find_previous_entry_for_key(ioopm_hash_table_t *ht, elem_t key) {
 
 
 
-// Finds the previous value in a rehashed hash table
+/// Finds the previous value in a rehashed hash table
 entry_t *find_previous_rehash(ioopm_hash_table_t *ht, int hash) {
     /// Calculate the bucket for this entry
     int bucket = hash % ht->size;
@@ -85,7 +96,7 @@ entry_t *find_previous_rehash(ioopm_hash_table_t *ht, int hash) {
 
 
 
-// Increases the size of the hash table by rehashing
+/// Increases the size of the hash table by rehashing
 static ioopm_hash_table_t *rehash(ioopm_hash_table_t *ht, int size) {
   ioopm_hash_table_t *ht_new = ioopm_hash_table_create(ht->hashfun, ht->eqfunc, size);
   ht_new->calc_size = ht->calc_size;
@@ -109,7 +120,7 @@ static ioopm_hash_table_t *rehash(ioopm_hash_table_t *ht, int size) {
 
 
 
-// Creates a new entry in a hash table
+/// Creates a new entry in a hash table
 entry_t *entry_create(elem_t key, elem_t value, entry_t *next, ioopm_hash_function hashfun) {
   entry_t *entry = calloc(1, sizeof(entry_t));
   entry->key = key;
@@ -124,7 +135,7 @@ entry_t *entry_create(elem_t key, elem_t value, entry_t *next, ioopm_hash_functi
 
 
 
-// Destroys an entry and all content in it
+/// Destroys an entry and all content in it
 static void entry_destroy(entry_t *entry) {
   free((char *)(entry->key).p);
   free(entry);
@@ -133,7 +144,7 @@ static void entry_destroy(entry_t *entry) {
 
 
 
-// Creates an entire hash table
+/// Creates an entire hash table
 ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash,ioopm_eq_function eqfunc, int size) {
   if (!size) size = No_Buckets;
 
@@ -148,7 +159,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash,ioopm_eq_fu
 
 
 
-// Inserts an entry into a hash table 
+/// Inserts an entry into a hash table 
 void ioopm_hash_table_insert(ioopm_hash_table_t **ht, elem_t key, elem_t value)
 {
   entry_t *entry = find_previous_entry_for_key(*ht, key);
@@ -176,7 +187,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t **ht, elem_t key, elem_t value)
 
 
 
-// Finds if hash table contains a given key
+/// Finds if hash table contains a given key
 elem_t *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key)
 {
   entry_t *tmp = find_previous_entry_for_key(ht, key);
@@ -197,7 +208,7 @@ elem_t *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key)
 
 
 
-// Removes all entris in an entire hash table
+/// Removes all entris in an entire hash table
 void ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
 {
   int hash;
@@ -219,7 +230,7 @@ void ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
 
 
 
-// Destroys a bucket in a hash table
+/// Destroys a bucket in a hash table
 void destroy_bucket(entry_t *entry) {
   entry_t *tmp = entry->next;
   while (tmp != NULL) {
@@ -232,7 +243,7 @@ void destroy_bucket(entry_t *entry) {
 
 
 
-// Destroys an entire hash table
+/// Destroys an entire hash table
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
   for (int i = 0; i <= ht->size; ++i) {
     destroy_bucket(&ht->buckets[i]);
@@ -244,7 +255,7 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
 
 
 
-// Finds the size of the hash table - How many entries it contains
+/// Finds the size of the hash table - How many entries it contains
 size_t ioopm_hash_table_size(ioopm_hash_table_t *h) {
   int n = 0;
   for (int i = 0; i < h->size; ++i)  {
@@ -261,7 +272,7 @@ size_t ioopm_hash_table_size(ioopm_hash_table_t *h) {
 
 
 
-// Clears an entire hash table
+/// Clears an entire hash table
 void ioopm_hash_table_clear(ioopm_hash_table_t *h) {
   for (int i = 0; i <= h->size; ++i) {
     destroy_bucket((&h->buckets[i])->next);
@@ -272,7 +283,7 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *h) {
 
 
 
-// Checks if an hash tabel is empty - Has no entries
+/// Checks if an hash tabel is empty - Has no entries
 bool ioopm_hash_table_is_empty(ioopm_hash_table_t *h) {
   for (int i = 0; i < h->size; ++i) {
     if ((&h->buckets[i])->next != NULL) return false;      
@@ -284,8 +295,9 @@ bool ioopm_hash_table_is_empty(ioopm_hash_table_t *h) {
 
 
 
-// Gets a linked list of all keys in an entire hash table
+
 // IMPORTAINT! Dealocate memory of the list after use
+/// Gets a linked list of all keys in an entire hash table
 ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *h) {
   ioopm_list_t *list = ioopm_linked_list_create(h->eqfunc);
 
@@ -307,8 +319,9 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *h) {
 
 
 
-// Gets a linked list of all values in an entire hash table
+
 // IMPORTAINT! Dealocate memory of the list after use
+/// Gets a linked list of all values in an entire hash table
 ioopm_list_t *ioopm_hash_table_values(ioopm_hash_table_t *h) {
   ioopm_list_t *value_list = ioopm_linked_list_create(NULL);
   
@@ -331,7 +344,7 @@ ioopm_list_t *ioopm_hash_table_values(ioopm_hash_table_t *h) {
 
 
 
-// Helper function: Checks if hash table has a given key
+/// Helper function: Checks if hash table has a given key
 static bool has_key(elem_t key, elem_t value, elem_t arg, ioopm_eq_function fun) {
   return ((fun == NULL && key.i == arg.i) || fun(arg, key)); 
 }
@@ -339,7 +352,7 @@ static bool has_key(elem_t key, elem_t value, elem_t arg, ioopm_eq_function fun)
 
 
 
-// Checks if hash table has a given key
+/// Checks if hash table has a given key
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key) {
   return ioopm_hash_table_any(ht, has_key, key);
 }
@@ -347,7 +360,7 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key) {
 
 
 
-// Helper function: Checks if hash table has a given value
+/// Helper function: Checks if hash table has a given value
 static bool has_value(elem_t key, elem_t value, elem_t arg, ioopm_eq_function cmp) {
   return ((cmp == NULL && (char *)value.p == (char *)arg.p) || cmp(value, arg));
 }
@@ -355,7 +368,7 @@ static bool has_value(elem_t key, elem_t value, elem_t arg, ioopm_eq_function cm
 
 
 
-// Checks if hash table has a given value
+/// Checks if hash table has a given value
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t value) {
   return ioopm_hash_table_any(ht, has_value, value);
 }
@@ -363,7 +376,7 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t value) {
 
 
 
-// Test function: Apply a Test-function pred to all entries. 
+/// Test function: Apply a Test-function pred to all entries. 
 // True if all entries satisfies condition 
 bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, elem_t arg) {
   for (int i = 0; i < ht->size; ++i) {
@@ -385,7 +398,7 @@ bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, elem_t a
 
 
 
-// Test function: Apply a Test-function pred to all entries. 
+/// Test function: Apply a Test-function pred to all entries. 
 // True if any entries satisfies condition 
 bool ioopm_hash_table_any(ioopm_hash_table_t *h, ioopm_predicate pred, elem_t arg) {
   for (int i = 0; i < h->size; ++i)  {
@@ -402,7 +415,7 @@ bool ioopm_hash_table_any(ioopm_hash_table_t *h, ioopm_predicate pred, elem_t ar
 
 
 
-// Tester function: Helper function: Applies test to all entries 
+/// Tester function: Helper function: Applies test to all entries 
 // Apply a test-function pred to all entries 
 void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function apply_fun, elem_t *arg) {
   for (int i = 0; i < ht->size; ++i) {

@@ -3,8 +3,11 @@
 #include "common.h"
 #include <math.h>
 
-/* Struct declaration for hash table and hash table entries */
+/** Struct declaration for hash table and hash table entries */
+
+/// The Type declaration of entries in a linked list
 typedef struct entry entry_t;
+/// The Type declaration of an entire hash table 
 typedef struct hash_table ioopm_hash_table_t;
 
 

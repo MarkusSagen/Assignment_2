@@ -2,14 +2,18 @@
 #include "hash_table.h"
 #include "common.h"
 
-/* Declaration of typedefs */
+/** Declaration of typedefs */
 
-
-typedef struct stock webstore_stock_t;              // Define type for merch in stock
-typedef struct merch webstore_merch_t;              // Define type for merch in stock
-typedef struct webstore webstore_t;                 // Define type for merch in stock
-typedef struct cart_item webstore_cart_item_t;      // Define type for merch in stock
-typedef struct cart webstore_cart_t;                // Define type for merch in stock
+/// The Type declaration of keeping merch in stock
+typedef struct stock webstore_stock_t;             
+/// The Type declaration of merchendise to have in webstore
+typedef struct merch webstore_merch_t;   
+/// The Type declaration of an entire webstore        
+typedef struct webstore webstore_t;      
+/// The Type declaration of putting items in a cart     
+typedef struct cart_item webstore_cart_item_t;     
+/// The Type declaration of carts in webstore
+typedef struct cart webstore_cart_t;              
 
 
 
@@ -37,21 +41,21 @@ void webstore_remove_merch(webstore_t *webstore, char *remove);
 void webstore_edit_merch(webstore_t *webstore, char *merch_to_edit, char *name, char *desc, int price);
 
 
-/// @brief Lists all places a given merch is loacted and how much
+/// @brief Lists all places a given merch is location and how much
 /// @param webstore, the webstore where all merch is stored
 void show_stock_aux(webstore_t *webstore);
 
 
-/// @brief Replenishes merchendise based on name and loaction
+/// @brief Replenishes merchendise based on name and location
 /// @param merch_to_update, the name of the merchendise to update the amount 
-/// @param location, location of the to be updatet
-///        If location is added where no previous merchendise was loacted, it will add it there
+/// @param location, location of the to be updated
+///        If location is added where no previous merchendise was location, it will add it there
 ///        There can be same merchendise at multiple locations
 /// @param amount, amount to be added of the merchendise to the given location
 void webstore_replenish(webstore_t *webstore, char *merch_to_update, char *location, int amount);
 
 
-/// @brief Helper functon for listing all merch
+/// @brief Helper function for listing all merch
 /// @param webstore, the webstore where all merch is stored
 /// @return pointer to a list of where all merchendise is located
 webstore_merch_t **get_merch(webstore_t *webstore);
@@ -93,7 +97,7 @@ int webstore_add_to_cart(webstore_t *webstore, char *item, int amount, int cart_
 /// @param amount, amount of the item to be removed 
 /// @param cart_selected, the cart from where to remove the item 
 /// @return An integer value based on how in went to remove items into the cart:
-///         1 - Sucessfully removed the item
+///         1 - Successfully removed the item
 ///         0 - Item didn't exist in cart
 ///         2 - Item was not available yet
 ///         3 - The chosen cart had not been created yet
@@ -117,7 +121,7 @@ int webstore_calculate_cost(webstore_t *webstore, int cart_selected);
 bool webstore_checkout(webstore_t *webstore, int cart_selected);
 
 
-/// TODO - NOT YET IMPLIMENTED
+/// THIS FUNCTION IS NOT YET IMPLEMENTED
 /// @brief Undoes the previous command
 /// @param webstore, the webstore where all items and the carts are stored
 void webstore_undo(webstore_t *webstore);
@@ -125,6 +129,7 @@ void webstore_undo(webstore_t *webstore);
 
 /// @brief Initializes the entire webstore and allocates memory
 /// @return An entire webstore
+/// @sideeffect Need to remove after use to not leak memory
 webstore_t *webstore_init();
 
 

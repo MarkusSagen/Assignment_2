@@ -2,11 +2,13 @@
 #include <stdbool.h>
 #include "common.h"
 
-/* Decalration of typedef */
 
+/** Decalration of typedef */
 
-typedef struct list ioopm_list_t;                           // type declaration of a linked list
-typedef unsigned long (*ioopm_hash_function)(elem_t key);   // type declaration of a comparison function in a linked list
+/// The Type declaration of an entire linked list
+typedef struct list ioopm_list_t;         
+/// The Type declaration of a comparison function in a linked list                  
+typedef unsigned long (*ioopm_hash_function)(elem_t key);   
 
 
 
