@@ -116,8 +116,6 @@ static void remove_item_from_carts(webstore_t *webstore, webstore_merch_t *merch
 void webstore_add_merch(webstore_t *webstore, char *name, char *desc, int price) {
   elem_t key = {.p = strdup(name)};
 
-  //TODO : Could be leak
-  
 
   // Checks if already merch with that name 
   if (ioopm_hash_table_lookup(webstore->hash, key));
@@ -483,23 +481,6 @@ void webstore_undo(webstore_t *webstore) {
 
 
 
-// // Calculate hash based on a variation of the hash function "djb2" by Dan Bernstein.
-// static long double string_sum_hash(const elem_t ware) {
-//   char *str = (char *)ware.p;
-//   long double hash = INITIAL_HASH_CONSTANT;     // Initialized to 5381, based on the modular arithmetic 
-//   int c = *str;
-
-//   /* The resulting hash will be at first:         5381 * 33 + c */
-//   while (c != 0) {
-//       hash = hash * HASH_MOD_SHIFT + c;  
-//       c = *(++str);
-//   }
-
-//   hash = round(hash);
-//   return hash;
-// }
-
-
 // Calculate hash as the sum of all strings in ascii
 static unsigned long string_sum_hash(const elem_t ware) {
     char *str = ware.s;
@@ -511,15 +492,6 @@ static unsigned long string_sum_hash(const elem_t ware) {
     while (*++str != '\0');
     return result;
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -582,6 +554,9 @@ ioopm_hash_table_destroy(webstore->hash);
 }
 
 
+
+
+
 // Helper funtion - Prints out if there already exists item with that name
 bool webstore_is_already_item(char *name, webstore_t *webstore, char *searched_for_ware) {
   elem_t key = {.p = name};
@@ -607,9 +582,14 @@ bool webstore_is_no_item(char *name, webstore_t *webstore,  char *searched_for_w
   return false; 
 }
 
+
+
+
+
 elem_t *webstore_hash_lookup(webstore_t *webstore, elem_t elem) {
   return ioopm_hash_table_lookup(webstore->hash, elem);
 }
+
 
 
 
@@ -634,4 +614,8 @@ int webstore_amount_in_stock(webstore_t *webstore, char *name) {
 
   return result;
 }
+
+
+
+
 
